@@ -140,7 +140,7 @@ def main():
     s.addChannel(s.FLOODING_CHANNEL);
     s.addChannel(s.NEIGHBOR_CHANNEL);
 	
-	for src in range(19):
+    for src in range(19):
         for dest in range(19):
             s.runTime(20);
             s.ping(src, dest, "Test"); 
