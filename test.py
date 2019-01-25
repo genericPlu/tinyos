@@ -4,7 +4,8 @@ import sys
 
 t = Tossim([])
 r = t.radio()
-f = open("topo.txt", "r")
+topoFile = 'topo/'+topoFile
+f = open(topoFile, "r")
 
 for line in f:
   s = line.split()
