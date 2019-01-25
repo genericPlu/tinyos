@@ -4,8 +4,7 @@ import sys
 
 t = Tossim([])
 r = t.radio()
-topoFile = 'topo/'+topoFile
-f = open(topoFile, "r")
+f = open('topo/long_line.topo', "r")
 
 for line in f:
   s = line.split()
