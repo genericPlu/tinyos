@@ -65,8 +65,10 @@ implementation{
       call Sender.send(sendPackage, destination);
    }
 
-   event void CommandHandler.printNeighbors(){}
-
+    event void CommandHandler.printNeighbors(){
+		dbg(FLOODING_CHANNEL, "Neighbors EVENT \n");
+   }
+   
    event void CommandHandler.printRouteTable(){}
 
    event void CommandHandler.printLinkState(){}
