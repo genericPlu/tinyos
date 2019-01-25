@@ -145,5 +145,6 @@ def main():
     s.runTime(20);
 	
 	s.neighborDMP(1,6);
+	s.runTime(20);
 if __name__ == '__main__':
     main()
