@@ -143,7 +143,8 @@ def main():
     for src in range(1,19):
         for dest in range(1,19):
             s.runTime(20);
-            s.ping(src, dest, "Test"); 
+			if src != dest:
+                s.ping(src, dest, "Test"); 
 	
     s.runTime(20);
     s.neighborDMP(1);
