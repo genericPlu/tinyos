@@ -140,9 +140,9 @@ def main():
     s.addChannel(s.FLOODING_CHANNEL);
     s.addChannel(s.NEIGHBOR_CHANNEL);
 	
-	for i in range(20):
-		s.runTime(20);
-		s.ping(i, i+1, "Hello"); 
+    for i in range(20):
+        s.runTime(20);
+        s.ping(i, i+1, "Hello"); 
 	
     s.runTime(20);
     s.neighborDMP(1);
