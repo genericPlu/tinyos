@@ -48,7 +48,7 @@ implementation{
    event void AMControl.stopDone(error_t err){}
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-      dbg(GENERAL_CHANNEL, "Packet Received\n");
+      #dbg(GENERAL_CHANNEL, "Packet Received\n");
 	  dbg(FLOODING_CHANNEL, "Packet Received at node \n");
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
@@ -64,7 +64,7 @@ implementation{
       dbg(GENERAL_CHANNEL, "PING EVENT \n");
       makePack(&sendPackage, TOS_NODE_ID, destination, 0, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
       call Sender.send(sendPackage, destination);
-	  dbg(FLOODING_CHANNEL, "Packet sent to node %d \n" , destination);
+	  dbg(FLOODING_CHANNEL, "Packet sent from node %d to node %d \n" , TOS_NODE_ID, destination);
 	  
    }
 
