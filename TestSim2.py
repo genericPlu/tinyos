@@ -139,7 +139,7 @@ def main():
     s.addChannel(s.GENERAL_CHANNEL);
     s.addChannel(s.FLOODING_CHANNEL);
     s.addChannel(s.NEIGHBOR_CHANNEL);
-	
+
     for src in range(1,19):
         for dest in range(1,19):
             s.runTime(20);
