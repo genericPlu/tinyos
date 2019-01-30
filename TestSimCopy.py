@@ -145,7 +145,7 @@ def main():
             s.runTime(20);
             if src != dest:
                 s.ping(src, dest, i); 
-			    i = i + 1
+                i = i + 1
 	
     s.runTime(20);
     s.neighborDMP(1);
