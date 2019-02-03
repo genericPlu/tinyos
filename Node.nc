@@ -61,7 +61,7 @@ implementation{
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
          dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-		 dbg(GENERAL_CHANNEL, "TTL is: %d\n", msg->TTL);
+		 dbg(GENERAL_CHANNEL, "TTL is: %d\n", myMsg->TTL);
          return msg;
       }
       dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
