@@ -62,6 +62,7 @@ implementation{
          pack* myMsg=(pack*) payload;
          dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
 		 myMsg->TTL = 5;
+		 logPack(myMsg);
 		 dbg(GENERAL_CHANNEL, "TTL is: %d\n", myMsg->TTL);
          return msg;
       }
