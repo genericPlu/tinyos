@@ -23,7 +23,7 @@ implementation {
 	
     Node.Receive -> GeneralReceive;
 	
-	components Timer0;
+	
 	Node.Timer0 -> Timer0;        
 	
     components ActiveMessageC;
