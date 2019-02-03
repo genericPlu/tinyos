@@ -41,7 +41,8 @@ implementation{
    }
    
    event void Timer0.fired(){
-		
+		postincrement ( ) ;
+
    }
 
    event void AMControl.startDone(error_t err){
