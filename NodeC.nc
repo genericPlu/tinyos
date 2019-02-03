@@ -17,11 +17,14 @@ implementation {
     components MainC;
     components Node;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
-
+	components new TimerMilliC() as Timer0;
+	
+	Node.Timer0 -> Timer0;
+	
     Node -> MainC.Boot;
-
+	
     Node.Receive -> GeneralReceive;
-
+	
     components ActiveMessageC;
     Node.AMControl -> ActiveMessageC;
 

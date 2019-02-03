@@ -22,6 +22,9 @@ module Node{
    uses interface SimpleSend as Sender;
 
    uses interface CommandHandler;
+   
+   uses interface Timer<TMilli> as Timer0;
+   
 }
 
 implementation{
@@ -69,7 +72,7 @@ implementation{
    }
 
     event void CommandHandler.printNeighbors(){
-		dbg(FLOODING_CHANNEL, "Neighbors EVENT \n");
+		dbg(NEIGHBOR_CHANNEL, "Neighbors EVENT \n");
    }
    
    event void CommandHandler.printRouteTable(){}
