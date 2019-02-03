@@ -35,8 +35,13 @@ implementation{
 
    event void Boot.booted(){
       call AMControl.start();
+	  
 
       dbg(GENERAL_CHANNEL, "Booted\n");
+   }
+   
+   event void Timer0.fired(){
+		
    }
 
    event void AMControl.startDone(error_t err){
@@ -51,11 +56,12 @@ implementation{
    event void AMControl.stopDone(error_t err){}
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-      
+      call Timer0.startPeriodic(250);
 	  dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
          dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
+		 dbg(GENERAL_CHANNEL, "TTL is: %d\n", msg->TTL);
          return msg;
       }
       dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
