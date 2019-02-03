@@ -28,6 +28,11 @@ module Node{
 }
 
 implementation{
+   uint8_t counter = 0;
+   task void increment(){
+	counter++;
+}
+   
    pack sendPackage;
 
    // Prototypes
@@ -41,10 +46,10 @@ implementation{
    }
    
    event void Timer0.fired(){
-		post increment( );
+		post increment();
 
    }
-
+ 
    event void AMControl.startDone(error_t err){
       if(err == SUCCESS){
          dbg(GENERAL_CHANNEL, "Radio On\n");
