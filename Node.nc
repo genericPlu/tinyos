@@ -41,7 +41,7 @@ implementation{
    }
    
    event void Timer0.fired(){
-		postincrement ( ) ;
+		post increment ( ) ;
 
    }
 
