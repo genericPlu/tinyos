@@ -29,6 +29,7 @@ module Node{
 
 implementation{
    uint8_t counter = 0;
+   uint8_t i = 0;
    task void increment(){
 	counter++;
 }
@@ -85,7 +86,7 @@ implementation{
 
     event void CommandHandler.printNeighbors(){
 		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
-		uint8_t i=0;
+		
 		while(i < 20 && i != TOS_NODE_ID){
 			makePack(&sendPackage, TOS_NODE_ID, destination, 25, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, destination);
