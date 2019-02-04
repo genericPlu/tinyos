@@ -84,7 +84,7 @@ implementation{
    }
 
     event void CommandHandler.printNeighbors(){
-		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of " %d, TOS_NODE_ID \n");
+		
 		
 		for (uint16_t i = 1; i < 20; i++){
 			makePack(&sendPackage, TOS_NODE_ID, destination, 25, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
