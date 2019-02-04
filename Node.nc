@@ -62,7 +62,9 @@ implementation{
    event void AMControl.stopDone(error_t err){}
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-      call Timer0.startPeriodic(250);
+      call Timer0.startPeriodic(25);
+	  makePack(&sendPackage, TOS_NODE_ID, 0, 5, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+	  call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 	  dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
@@ -84,7 +86,9 @@ implementation{
    }
 
     event void CommandHandler.printNeighbors(){
-		dbg(NEIGHBOR_CHANNEL, "Neighbors EVENT \n");
+		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of " %d, TOS_NODE_ID \n");
+		event void CommandHandler.ping(TOS_NODE_ID, uint8_t *payload);
+		event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len)
    }
    
    event void CommandHandler.printRouteTable(){}
