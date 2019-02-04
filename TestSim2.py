@@ -140,14 +140,12 @@ def main():
     s.addChannel(s.FLOODING_CHANNEL);
     s.addChannel(s.NEIGHBOR_CHANNEL);
 
-    for src in range(1,20):
-        for dest in range(1,20):
-            s.runTime(20);
-            if src != dest:
-                s.ping(src, dest, "Test"); 
+    
+    for dest in range(1,20):
+        s.runTime(20);
+        if src != dest:
+            s.ping(src, dest, "Test"); 
 	
-    s.runTime(20);
-    s.neighborDMP(1);
-    s.runTime(20);
+    
 if __name__ == '__main__':
     main()
