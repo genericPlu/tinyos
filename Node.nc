@@ -89,8 +89,8 @@ implementation{
 		
 		while(i < 20 && i != TOS_NODE_ID){
 			makePack(&sendPackage, TOS_NODE_ID, i, 25, 0, 0, i, PACKET_MAX_PAYLOAD_SIZE);
-			call Sender.send(sendPackage, destination);
-			i = i+1;
+			call Sender.send(sendPackage, i);
+			i++;
 		}
    }
    
