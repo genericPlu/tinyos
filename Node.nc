@@ -29,7 +29,7 @@ module Node{
 }
 
 implementation{
-    typedef struct lista{
+    typedef struct uint16_t lista{
 		uint16_t src;
 		uint16_t seq;
 	};
