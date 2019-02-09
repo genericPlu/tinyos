@@ -29,6 +29,7 @@ module Node{
 
 implementation{
    uint8_t counter = 0;
+   
    uint8_t i = 1;
    
    task void increment(){
