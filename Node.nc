@@ -52,6 +52,7 @@ implementation{
    
    event void Timer0.fired(){
 	call AMControl.stop();
+	call AMControl.start();
 
    }
  
@@ -91,7 +92,6 @@ implementation{
 
 
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
-      call AMControl.start();
 	  call Timer0.startOneShot(25);
 	  dbg(GENERAL_CHANNEL, "PING EVENT \n");
       makePack(&sendPackage, TOS_NODE_ID, destination, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
