@@ -141,11 +141,8 @@ def main():
     s.addChannel(s.NEIGHBOR_CHANNEL);
     i = 1
     for src in range(1,20):
-        for dest in range(1,20):
-            s.runTime(20);
-            if src != dest:
-                s.ping(src, dest, i); 
-                i = i + 1
+        s.runTime(20);
+        s.ping(src, src+1, dest); 
 	
     s.runTime(20);
     s.neighborDMP(1);
