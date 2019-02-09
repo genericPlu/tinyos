@@ -84,13 +84,8 @@ implementation{
 	  
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-		 if (TOS_NODE_ID != myMsg->dest){
-			dbg(GENERAL_CHANNEL, "Package Payload: %s\nSequence# %d\n", myMsg->payload, myMsg->seq);
-			makePack(&sendPackage, TOS_NODE_ID, lastnode, 0, 0, sequence++, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-			return msg;
-		}
-		else{
+		
+		if (TOS_NODE_ID == myMsg->dest){
 			dbg(GENERAL_CHANNEL, "Package Payload: %s\nSequence# %d\n", myMsg->payload, myMsg->seq);
 			call AMControl.stop();
 			return msg;
