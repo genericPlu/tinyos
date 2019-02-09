@@ -88,7 +88,7 @@ implementation{
 			return msg;
 		}
 		else{
-
+			call Timer0.startOneShot(25);
 			dbg(GENERAL_CHANNEL, "Package Payload: %s\nSequence# %d\n", myMsg->payload, sequence);
 			return msg;
 
