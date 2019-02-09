@@ -42,7 +42,7 @@ implementation{
 
    event void Boot.booted(){
       call AMControl.start();
-	  call Timer0.startPeriodic(250);
+	  
 
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
@@ -78,6 +78,7 @@ implementation{
 
 
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
+	  call timer0.OneShot(25);
       dbg(GENERAL_CHANNEL, "PING EVENT \n");
       makePack(&sendPackage, TOS_NODE_ID, destination, 25, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
