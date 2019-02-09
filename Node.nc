@@ -33,7 +33,7 @@ implementation{
    uint8_t* a = 19;
    uint8_t sequence = 0;
    uint8_t i = 1;
-   uint16_t dest = 19;
+   uint16_t lastnode = 19;
    
 
    
@@ -84,7 +84,7 @@ implementation{
 		 if (TOS_NODE_ID != 19){
 			dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
 			myMsg->payload = 19;
-			makePack(&sendPackage, TOS_NODE_ID, dest, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
+			makePack(&sendPackage, TOS_NODE_ID, lastnode, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			return msg;
 		}
