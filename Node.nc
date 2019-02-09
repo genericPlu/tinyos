@@ -13,7 +13,7 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-#define PACKETLIST_SIZE = 20;
+
 module Node{
    uses interface Boot;
 
@@ -70,7 +70,6 @@ implementation{
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
          if (TOS_NODE_ID !== myMsg->dest ){
-			forwarded.addToList(myMsg->src, myMsg->seq);
 			dbg(GENERAL_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
 			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 0, 0, sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
