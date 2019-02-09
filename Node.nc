@@ -38,17 +38,8 @@ implementation{
 		uint16_t seq;
 	}
 	
-	bool inPacktlist(uint16_t src, uint16_t seq){
-		uint16_t i = 0;
-		for (i = 0; i < PACKETLIST_SIZE; i++) {
-			if (src == packetlist[i].src && seq == packetlist[i].seq) {
-				dbg(FLOODING_CHANNEL, "Found in list: src%u seq%u\n", src, seq);
-				return TRUE;
-			}
-		}
-		return FALSE;
-	}
-
+	
+ 
 	void addToList(uint16_t src, uint16_t seq) {
 		if (counter < PACKETLIST_SIZE) { 
 			// add to end of currently extant list
