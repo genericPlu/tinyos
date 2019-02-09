@@ -33,6 +33,7 @@ implementation{
    uint8_t counter = 0;
    uint8_t sequence = 0;
    uint8_t i = 1;
+   uint16_t dest = 19;
    
    task void increment(){
 	counter++;
@@ -79,7 +80,7 @@ implementation{
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
       /*call Timer0.startOneShot(25);*/
 	  dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
-	  uint16_t dest = 19;
+	  
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
 		 if (myMsg->payload != TOS_NODE_ID){
