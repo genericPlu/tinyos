@@ -84,11 +84,12 @@ implementation{
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
          dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
+		 makePack(&sendPackage, TOS_NODE_ID, payload, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
+		 call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 		
          return msg;
       }
-	  makePack(&sendPackage, TOS_NODE_ID, payload, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
-      call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+	  
       dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
       
 	  return msg;
