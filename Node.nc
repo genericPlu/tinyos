@@ -31,7 +31,7 @@ module Node{
 
 implementation{
    uint8_t counter = 0;
-   
+   uint8_t sequence = 0;
    uint8_t i = 1;
    
    task void increment(){
@@ -64,7 +64,12 @@ implementation{
       }
    }
 
-   event void AMControl.stopDone(error_t err){}
+   event void AMControl.stopDone(error_t err){
+		event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
+		return msg;
+	}
+   
+   }
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
       
@@ -81,9 +86,8 @@ implementation{
 
 
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
-	  call Timer0.startOneShot(25);
       dbg(GENERAL_CHANNEL, "PING EVENT \n");
-      makePack(&sendPackage, TOS_NODE_ID, destination, 25, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+      makePack(&sendPackage, TOS_NODE_ID, destination, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 	  dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
 	  
