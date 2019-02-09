@@ -71,7 +71,7 @@ implementation{
          pack* myMsg=(pack*) payload;
          dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
 		 logPack(myMsg);
-		 if (TOS_NODE_ID !== myMsg->dest){
+		 if (TOS_NODE_ID == myMsg->dest){
 			dbg(GENERAL_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
 			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 0, 0, sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
@@ -86,7 +86,7 @@ implementation{
 		
 
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
-	  call Timer0.startOneShot(25);
+	  /*call Timer0.startOneShot(25);*/
       dbg(GENERAL_CHANNEL, "PING EVENT \n");
       makePack(&sendPackage, TOS_NODE_ID, destination, 25, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
