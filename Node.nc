@@ -86,6 +86,7 @@ implementation{
 			return msg;
          dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
 		 makePack(&sendPackage, TOS_NODE_ID, payload, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
+		 
 		 call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 		
          return msg;
@@ -103,7 +104,7 @@ implementation{
       makePack(&sendPackage, TOS_NODE_ID, destination, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 	  dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
-	  dbg(FLOODING_CHANNEL, "Payload %d \n" ,*payload);
+	  dbg(FLOODING_CHANNEL, "Payload %d \n" ,payload);
    }
 
     event void CommandHandler.printNeighbors(){
