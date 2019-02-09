@@ -14,7 +14,6 @@
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
 #define PACKETLIST_SIZE = 20;
-
 module Node{
    uses interface Boot;
 
@@ -119,35 +118,5 @@ implementation{
       memcpy(Package->payload, payload, length);
    }
    
-   bool inPacketlist(uint16_t src, uint16_t seq){
-		uint16_t i = 0; 
-		for (i = 0; i < PACKETLIST_SIZE; i++) {
-			if (src == packetlist[i].src && seq == packetlist[i].seq) {
-				dbg(FLOODING_CHANNEL, "Found in list: src%u seq%u\n", src, seq);
-				return TRUE;
-			}
-		}
-		return FALSE;
-	}
- 
-	void addToList(uint16_t src, uint16_t seq) {
-		if (counter < PACKETLIST_SIZE) { 
-			// add to end of currently extant list
-			packetlist[counter].src = src;
-			packetlist[counter].seq = seq;
-			counter++;
-		} else {
-			uint32_t i;
-			// shift all history over, erasing oldest
-			for (i = 0; i<(PACKETLIST_SIZE-1); i++) {
-				packetlist[i].src = packetlist[i+1].src;
-				packetlist[i].seq = packetlist[i+1].seq;
-			}
-			// add to end of list
-			packetlist[PACKETLIST_SIZE].src = src;
-			packetlist[PACKETLIST_SIZE].seq = seq;
-		}
-		dbg(FLOODING_CHANNEL, "Added to packetlist: src%u seq%u\n", src, seq);
-		return;
-	}
+   
 }
