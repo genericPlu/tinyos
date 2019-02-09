@@ -87,8 +87,7 @@ implementation{
 		 if (TOS_NODE_ID != myMsg->dest){
 			dbg(GENERAL_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
 			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 0, 0, sequence++, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-			call Sender.send(sendPackage, TOS_NODE_ID+1);
-			dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID,  TOS_NODE_ID+1);
+			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			return msg;
 		}
 		
