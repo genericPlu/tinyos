@@ -31,11 +31,7 @@ module Node{
 implementation{
    uint8_t sequence = 0;
    uint16_t counter = 0;
-   typedef struct packetlist{
-		uint16_t src;
-		uint16_t seq;
-	}
-   
+ 
    pack sendPackage;
 
    // Prototypes
