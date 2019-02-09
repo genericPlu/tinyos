@@ -12,7 +12,7 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-
+#define PACKETLIST_SIZE = 20;
 module Node{
    uses interface Boot;
 
@@ -33,12 +33,46 @@ implementation{
    uint8_t* a = (void*)19;
    uint8_t sequence = 0;
    uint8_t i = 1;
-   uint16_t lastnode = 19;
-   typedef struct packtlist{
+   uint16_t counter = 0;
+   
+   typedef struct packetlist{
 		uint16_t src;
 		uint16_t seq;
 	};
+	
+	bool inPacktlist(uint16_t src, uint16_t seq){
+		uint32_t i;
+		for (i = 0; i < PACKETLIST_SIZE; i++) {
+			if (src == packetlist[i].src && seq == packetlist[i].seq) {
+				dbg(FLOODING_CHANNEL, "Found in list: src%u seq%u\n", src, seq);
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
 
+	void addToList(uint16_t src, uint16_t seq) {
+		if (counter < PACKETLIST_SIZE) { 
+			// add to end of currently extant list
+			packetlist[counter].src = src;
+			packetlist[counter].seq = seq;
+			counter++;
+		} else {
+			uint32_t i;
+			// shift all history over, erasing oldest
+			for (i = 0; i<(PACKETLIST_SIZE-1); i++) {
+				packetlist[i].src = History[i+1].src;
+				packetlist[i].seq = History[i+1].seq;
+			}
+			// add to end of list
+			packetlist[PACKETLIST_SIZE].src = theSrc;
+			packetlist[PACKETLIST_SIZE].seq = theSeq;
+		}
+//		dbg(FLOODING_CHANNEL, "Added to packetlist: src%u seq%u\n", src, seq);
+		return;
+	}
+   
+   struct forwarded packetlist[PACKETLIST_SIZE];
    
    pack sendPackage;
 
@@ -81,10 +115,10 @@ implementation{
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
       /*call Timer0.startOneShot(25);*/
 	  dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
-	  
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-		 if (TOS_NODE_ID != myMsg->dest){
+		 if (TOS_NODE_ID != myMsg->dest && !inPacktlist(myMsg->src,myMsg->seq){
+			forwarded.addToList(myMsg->src, myMsg->seq);
 			dbg(GENERAL_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
 			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 0, 0, sequence++, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
