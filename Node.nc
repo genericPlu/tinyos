@@ -29,11 +29,11 @@ module Node{
 }
 
 implementation{
-    typedef struct packetlist{
+    typedef struct list{
 		uint16_t src;
 		uint16_t seq;
 	};
-   struct packetlist forwarded[PACKETLIST_SIZE];
+   struct list sent[PACKETLIST_SIZE];
    
    uint8_t sequence = 0;
    uint16_t counter = 0;
@@ -116,7 +116,6 @@ implementation{
       Package->seq = seq;
       Package->protocol = protocol;
       memcpy(Package->payload, payload, length);
-    }
-	
-	
+   }
+
 }
