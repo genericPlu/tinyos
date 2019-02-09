@@ -13,7 +13,7 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-#define PACKETLIST_SIZE = 20;
+
 module Node{
    uses interface Boot;
 
@@ -29,14 +29,12 @@ module Node{
 }
 
 implementation{
-   uint8_t sequence = 0;
-   uint16_t counter = 0;
-   typedef struct packetlist{
-		uint16_t src;
-		uint16_t seq;
-	}
+   uint8_t counter = 0;
+   uint8_t i = 1;
    
-   
+   task void increment(){
+	counter++;
+}
    
    pack sendPackage;
 
@@ -51,7 +49,7 @@ implementation{
    }
    
    event void Timer0.fired(){
-
+		post increment();
 
    }
  
@@ -92,7 +90,12 @@ implementation{
     event void CommandHandler.printNeighbors(){
 		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
 		
-
+		while(i < 20){
+			if(i != TOS_NODE_ID){
+				
+			}
+			i++;
+		}
    }   
    
    event void CommandHandler.printRouteTable(){}
@@ -118,5 +121,5 @@ implementation{
       memcpy(Package->payload, payload, length);
    }
    
-   
+
 }
