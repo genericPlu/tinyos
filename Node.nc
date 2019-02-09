@@ -35,8 +35,9 @@ implementation{
    typedef struct packetlist{
 		uint16_t src;
 		uint16_t seq;
-	};
-	struct forwarded packetlist[PACKETLIST_SIZE];
+	}
+	
+   struct forwarded packetlist[PACKETLIST_SIZE];
 	
    pack sendPackage;
 
