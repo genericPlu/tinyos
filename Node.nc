@@ -29,8 +29,12 @@ module Node{
 }
 
 implementation{
-   uint8_t counter = 0;
-   uint8_t i = 1;
+   uint8_t sequence = 0;
+   uint16_t counter = 0;
+   typedef struct packetlist{
+		uint16_t src;
+		uint16_t seq;
+	}
    
    task void increment(){
 	counter++;
@@ -90,12 +94,7 @@ implementation{
     event void CommandHandler.printNeighbors(){
 		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
 		
-		while(i < 20){
-			if(i != TOS_NODE_ID){
-				
-			}
-			i++;
-		}
+
    }   
    
    event void CommandHandler.printRouteTable(){}
@@ -120,4 +119,36 @@ implementation{
       Package->protocol = protocol;
       memcpy(Package->payload, payload, length);
    }
+   
+   bool inPacketlist(uint16_t src, uint16_t seq){
+		uint16_t i = 0; 
+		for (i = 0; i < PACKETLIST_SIZE; i++) {
+			if (src == packetlist[i].src && seq == packetlist[i].seq) {
+				dbg(FLOODING_CHANNEL, "Found in list: src%u seq%u\n", src, seq);
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+ 
+	void addToList(uint16_t src, uint16_t seq) {
+		if (counter < PACKETLIST_SIZE) { 
+			// add to end of currently extant list
+			packetlist[counter].src = src;
+			packetlist[counter].seq = seq;
+			counter++;
+		} else {
+			uint32_t i;
+			// shift all history over, erasing oldest
+			for (i = 0; i<(PACKETLIST_SIZE-1); i++) {
+				packetlist[i].src = History[i+1].src;
+				packetlist[i].seq = History[i+1].seq;
+			}
+			// add to end of list
+			packetlist[PACKETLIST_SIZE].src = theSrc;
+			packetlist[PACKETLIST_SIZE].seq = theSeq;
+		}
+		dbg(FLOODING_CHANNEL, "Added to packetlist: src%u seq%u\n", src, seq);
+		return;
+	}
 }
