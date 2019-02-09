@@ -120,6 +120,5 @@ implementation{
       Package->protocol = protocol;
       memcpy(Package->payload, payload, length);
    }
-   
 
 }
