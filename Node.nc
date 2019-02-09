@@ -29,15 +29,11 @@ module Node{
 }
 
 implementation{
-    typedef struct uint16_t lista{
-		uint16_t src;
-		uint16_t seq;
-	};
    
    
    uint8_t sequence = 0;
    uint16_t counter = 0;
-   struct lista Sent[PACKETLIST_SIZE];
+
 
   
    pack sendPackage;
