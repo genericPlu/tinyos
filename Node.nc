@@ -30,7 +30,7 @@ module Node{
 implementation{
    uint8_t counter = 0;
    uint8_t i = 1;
-   call timer0.startPerodic(250);
+   
    task void increment(){
 	counter++;
 }
@@ -42,7 +42,7 @@ implementation{
 
    event void Boot.booted(){
       call AMControl.start();
-	  
+	  call timer0.startPerodic(250);
 
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
