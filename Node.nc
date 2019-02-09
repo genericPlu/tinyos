@@ -33,7 +33,7 @@ implementation{
 		uint16_t src;
 		uint16_t seq;
 	};
-   struct forwarded packetlist[PACKETLIST_SIZE];
+   struct packetlist forwarded[PACKETLIST_SIZE];
    
    uint8_t sequence = 0;
    uint16_t counter = 0;
@@ -72,9 +72,16 @@ implementation{
 	  dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-         dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-		 logPack(myMsg);
-         return msg;
+         if (TOS_NODE_ID !== myMsg->dest && !inPacketlist(myMsg->src,myMsg->seq){
+			forwarded.addToList(myMsg->src, myMsg->seq);
+			dbg(GENERAL_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
+			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 0, 0, sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+			dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
+			return msg;
+		}
+		
+         
       }
       dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
       return msg;
@@ -116,6 +123,37 @@ implementation{
       Package->seq = seq;
       Package->protocol = protocol;
       memcpy(Package->payload, payload, length);
-   }
-
+    }
+	
+	bool inPacketlist(uint16_t src, uint16_t seq){
+		uint16_t i = 0; 
+		for (i = 0; i < PACKETLIST_SIZE; i++) {
+			if (src == packetlist[i].src && seq == packetlist[i].seq) {
+				dbg(FLOODING_CHANNEL, "Found in list: src%u seq%u\n", src, seq);
+				return TRUE;
+			}
+		}
+		return FALSE;
+	}
+ 
+	void addToList(uint16_t src, uint16_t seq) {
+		if (counter < PACKETLIST_SIZE) { 
+			// add to end of currently extant list
+			packetlist[counter].src = src;
+			packetlist[counter].seq = seq;
+			counter++;
+		} else {
+			uint32_t i;
+			// shift all history over, erasing oldest
+			for (i = 0; i<(PACKETLIST_SIZE-1); i++) {
+				packetlist[i].src = packetlist[i+1].src;
+				packetlist[i].seq = packetlist[i+1].seq;
+			}
+			// add to end of list
+			packetlist[PACKETLIST_SIZE].src = src;
+			packetlist[PACKETLIST_SIZE].seq = seq;
+		}
+		dbg(FLOODING_CHANNEL, "Added to packetlist: src%u seq%u\n", src, seq);
+		return;
+	}
 }
