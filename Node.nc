@@ -30,7 +30,7 @@ module Node{
 }
 
 implementation{
-   uint8_t counter = 0;
+   uint8_t* a = 19;
    uint8_t sequence = 0;
    uint8_t i = 1;
    uint16_t dest = 19;
@@ -85,7 +85,7 @@ implementation{
          pack* myMsg=(pack*) payload;
 		 if (myMsg->payload != TOS_NODE_ID){
 			dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-			makePack(&sendPackage, TOS_NODE_ID, dest, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
+			makePack(&sendPackage, TOS_NODE_ID, dest, 0, 0, sequence++, a, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			return msg;
 		}
