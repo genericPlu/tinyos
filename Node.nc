@@ -82,12 +82,13 @@ implementation{
 	  
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-		 if (myMsg == TOS_NODE_ID)
+		 if (myMsg->payload != TOS_NODE_ID){
+			dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
+			makePack(&sendPackage, TOS_NODE_ID, payload, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
+			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			return msg;
+		}
          dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-		 makePack(&sendPackage, TOS_NODE_ID, payload, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
-		 
-		 call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 		
          return msg;
       }
