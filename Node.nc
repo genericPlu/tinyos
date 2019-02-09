@@ -37,7 +37,8 @@ implementation{
    
    uint8_t sequence = 0;
    uint16_t counter = 0;
-   
+   struct list Sent[PACKETLIST_SIZE];
+
   
    pack sendPackage;
 
