@@ -30,7 +30,6 @@ module Node{
 }
 
 implementation{
-   uint8_t* a = (void*)19;
    uint8_t sequence = 0;
    uint16_t counter = 0;
    typedef struct packetlist{
