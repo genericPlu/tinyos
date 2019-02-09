@@ -29,13 +29,13 @@ module Node{
 }
 
 implementation{
+   uint8_t counter = 0;
+   uint8_t i = 1;
    
+   task void increment(){
+	counter++;
+}
    
-   uint8_t sequence = 0;
-   uint16_t counter = 0;
-
-
-  
    pack sendPackage;
 
    // Prototypes
@@ -49,7 +49,7 @@ implementation{
    }
    
    event void Timer0.fired(){
-
+		post increment();
 
    }
  
@@ -69,13 +69,9 @@ implementation{
 	  dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-         if (TOS_NODE_ID !== myMsg->dest ){
-			dbg(GENERAL_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
-			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 0, 0, sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-			dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
-			return msg;
-		}
+         dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
+		 logPack(myMsg);
+         return msg;
       }
       dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
       return msg;
@@ -93,7 +89,13 @@ implementation{
 
     event void CommandHandler.printNeighbors(){
 		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
-	
+		
+		while(i < 20){
+			if(i != TOS_NODE_ID){
+				
+			}
+			i++;
+		}
    }   
    
    event void CommandHandler.printRouteTable(){}
@@ -118,5 +120,4 @@ implementation{
       Package->protocol = protocol;
       memcpy(Package->payload, payload, length);
    }
-
 }
