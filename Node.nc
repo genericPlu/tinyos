@@ -30,7 +30,7 @@ module Node{
 
 implementation{
    uint8_t counter = 0;
-   uint8_t sequence = 0;
+   uint8_t sequence = 1;
    typedef struct packetlist{
 		uint16_t src;
 		uint16_t seq;
@@ -72,7 +72,7 @@ implementation{
          pack* myMsg=(pack*) payload;
 		 if (TOS_NODE_ID != myMsg->dest){
 			dbg(GENERAL_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
-			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 0, 0, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 0, 0, sequence++, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			if(TOS_NODE_ID == 1)
 		dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, TOS_NODE_ID + 1);
