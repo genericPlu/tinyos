@@ -26,7 +26,7 @@ implementation {
 	
 	
 	Node.Timer0 -> Timer0;        
-	Node.list -> list1;
+	
     components ActiveMessageC;
     Node.AMControl -> ActiveMessageC;
 
