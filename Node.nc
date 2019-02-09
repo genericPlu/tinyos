@@ -88,7 +88,7 @@ implementation{
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			return msg;
 		}
-         dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
+         
 		
          return msg;
       }
