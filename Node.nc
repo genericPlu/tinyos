@@ -88,7 +88,7 @@ implementation{
 
     event void CommandHandler.printNeighbors(){
 		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
-		
+		call Timer0.startOneShot(25);
 		while(i < 20){
 			if(i != TOS_NODE_ID){
 				
