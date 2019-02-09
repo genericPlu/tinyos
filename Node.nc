@@ -37,7 +37,7 @@ implementation{
    typedef struct packetlist{
 		uint16_t src;
 		uint16_t seq;
-	};
+	}
 	
 	bool inPacktlist(uint16_t src, uint16_t seq){
 		uint32_t i;
