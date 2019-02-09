@@ -81,9 +81,9 @@ implementation{
 	  
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-		 if (myMsg->payload != TOS_NODE_ID){
+		 if (TOS_NODE_ID != 19){
 			dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-			makePack(&sendPackage, TOS_NODE_ID, dest, 0, 0, sequence++, a, PACKET_MAX_PAYLOAD_SIZE);
+			makePack(&sendPackage, TOS_NODE_ID, dest, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			return msg;
 		}
