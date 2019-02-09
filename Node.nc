@@ -33,7 +33,7 @@ implementation{
    uint8_t* a = (void*)19;
    uint8_t sequence = 0;
    uint16_t counter = 0;
-   uint32_t i = 0;
+   uint16_t i = 0;
    typedef struct packetlist{
 		uint16_t src;
 		uint16_t seq;
