@@ -42,7 +42,7 @@ implementation{
 
    event void Boot.booted(){
       call AMControl.start();
-	  call Timer0.startPerodic(250);
+	  call Timer0.startPeriodic(250);
 
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
