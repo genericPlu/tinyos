@@ -39,9 +39,6 @@ implementation{
 	}
 	
 	
-   
-   struct forwarded packetlist[PACKETLIST_SIZE];
-   
    pack sendPackage;
 
    // Prototypes
