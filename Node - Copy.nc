@@ -160,12 +160,12 @@ implementation{
 			uint32_t i;
 			// shift all history over, erasing oldest
 			for (i = 0; i<(PACKETLIST_SIZE-1); i++) {
-				packetlist[i].src = History[i+1].src;
-				packetlist[i].seq = History[i+1].seq;
+				packetlist[i].src = packetlist[i+1].src;
+				packetlist[i].seq = packetlist[i+1].seq;
 			}
 			// add to end of list
-			packetlist[PACKETLIST_SIZE].src = theSrc;
-			packetlist[PACKETLIST_SIZE].seq = theSeq;
+			packetlist[PACKETLIST_SIZE].src = src;
+			packetlist[PACKETLIST_SIZE].seq = seq;
 		}
 		dbg(FLOODING_CHANNEL, "Added to packetlist: src%u seq%u\n", src, seq);
 		return;
