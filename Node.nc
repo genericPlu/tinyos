@@ -86,7 +86,7 @@ implementation{
          pack* myMsg=(pack*) payload;
 		 if (TOS_NODE_ID != myMsg->dest){
 			dbg(GENERAL_CHANNEL, "Package Payload: %s\nSequence# %d\n", myMsg->payload, myMsg->seq);
-			CommandHandler.ping(TOS_NODE_ID++, myMsg->payload)
+			call CommandHandler.ping(TOS_NODE_ID++, myMsg->payload)
 			return msg;
 		}
 		
