@@ -25,7 +25,7 @@ module Node{
    
    uses interface Timer<TMilli> as Timer0;
    
-   uses interface List as list;
+   uses interface List as list(2);
    
 }
 
