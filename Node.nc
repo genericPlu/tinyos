@@ -79,10 +79,12 @@ implementation{
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
       
 	  dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
+	  if (payload == TOS_NODE_ID)
+		return msg;
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
          dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-		 
+		
          return msg;
       }
 	  makePack(&sendPackage, TOS_NODE_ID, payload, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
