@@ -32,7 +32,7 @@ implementation{
     typedef struct packetlist{
 		uint16_t src;
 		uint16_t seq;
-	}
+	};
    
    
    uint8_t sequence = 0;
