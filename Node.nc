@@ -26,6 +26,7 @@ module Node{
    
    uses interface Timer<TMilli> as Timer0;
    
+   uses interface List<uint8_t> as list;
 }
 
 implementation{
