@@ -79,12 +79,12 @@ implementation{
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
       /*call Timer0.startOneShot(25);*/
 	  dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
-	  
+	  uint16_t dest = 19;
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-		 if ((uint8_t)myMsg->payload != TOS_NODE_ID){
+		 if (myMsg->payload != TOS_NODE_ID){
 			dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-			makePack(&sendPackage, TOS_NODE_ID, myMsg->payload, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
+			makePack(&sendPackage, TOS_NODE_ID, dest, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			return msg;
 		}
