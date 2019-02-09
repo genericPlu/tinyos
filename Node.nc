@@ -82,7 +82,7 @@ implementation{
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
          dbg(GENERAL_CHANNEL, "Package Payload: %s\n", myMsg->payload);
-		 logPack(myMsg);
+		 
          return msg;
       }
 	  makePack(&sendPackage, TOS_NODE_ID, payload, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
