@@ -35,9 +35,7 @@ implementation{
    uint8_t i = 1;
    uint16_t dest = 19;
    
-   task void increment(){
-	counter++;
-}
+
    
    pack sendPackage;
 
