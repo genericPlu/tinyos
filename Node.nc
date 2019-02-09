@@ -77,7 +77,7 @@ implementation{
    
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-      call Timer0.startOneShot(25);
+      /*call Timer0.startOneShot(25);*/
 	  dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 	  
       if(len==sizeof(pack)){
