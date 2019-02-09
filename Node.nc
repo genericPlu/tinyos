@@ -37,7 +37,7 @@ implementation{
 		uint16_t seq;
 	}
    
-   struct forwarded packetlist[PACKETLIST_SIZE];
+   
    
    pack sendPackage;
 
