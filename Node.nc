@@ -94,7 +94,6 @@ implementation{
 	  
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-		 map.insert(myMsg->seq,myMsg->src); 
 		 else if (TOS_NODE_ID == myMsg->dest){
 		    dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 			dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
