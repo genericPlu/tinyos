@@ -65,7 +65,7 @@ implementation{
 
    // Prototypes
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
-
+   bool checkList(pack *Package);
    event void Boot.booted(){
       call AMControl.start();
 	  
@@ -91,16 +91,10 @@ implementation{
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
       
-	  
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-         if(myMsg->TTL == 0){ 
-             // dbg(GENERAL_CHANNEL, "Dropping the packet\n");
-         }
-		 else if (TOS_NODE_ID == myMsg->dest){
-		    dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
-			dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
-			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, myMsg->TTL -1, 0, sequence++, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+         if(myMsg->TTL != 0){ 
+			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, sequence++, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			if(TOS_NODE_ID == 1)
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, TOS_NODE_ID + 1);
@@ -108,9 +102,15 @@ implementation{
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, TOS_NODE_ID -1);
 			else
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d and Packet sent from Node %d to Node %d  \n" , TOS_NODE_ID, TOS_NODE_ID -1, TOS_NODE_ID, TOS_NODE_ID + 1);
+			 
+         }
+		 else if (TOS_NODE_ID == myMsg->dest){
+		    dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
+			dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
 			
 			return msg;
 		}
+		
          return msg;
       }
       dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
