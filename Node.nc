@@ -122,7 +122,7 @@ implementation{
 	  /*call Timer0.startOneShot(25);*/
       dbg(GENERAL_CHANNEL, "PING EVENT \n");
       makePack(&sendPackage, TOS_NODE_ID, destination, 20, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
-	  list.pushback(sendPackage);
+	  call list.pushback(sendPackage);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 	  dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
    }
