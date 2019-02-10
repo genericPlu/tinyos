@@ -107,7 +107,7 @@ implementation{
 				return msg;
 		}
 		else if(myMsg->dest == AM_BROADCAST_ADDR){
-				makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 1, 0, 1, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 1, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call Sender.send(sendPackage, myMsg->src);
 				dbg(NEIGHBOR_CHANNEL, "Neighbor Response Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 		}
