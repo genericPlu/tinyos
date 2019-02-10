@@ -118,6 +118,7 @@ implementation{
 				call list.pushback(sendPackage);
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d for Node %d. Resending..\n", TOS_NODE_ID, myMsg->dest);
 				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 				return msg;
 			
 			}
