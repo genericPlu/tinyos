@@ -81,6 +81,7 @@ implementation{
    event void AMControl.startDone(error_t err){
       if(err == SUCCESS){
          dbg(GENERAL_CHANNEL, "Radio On\n");
+		 call Timer0.startPeriodic(500);
       }else{
          //Retry until successful
          call AMControl.start();
@@ -97,7 +98,7 @@ implementation{
 		
 			return msg;
 		}
-		if (TOS_NODE_ID == myMsg->dest){
+		else if (TOS_NODE_ID == myMsg->dest){
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, sequence++, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
@@ -139,7 +140,7 @@ implementation{
    }
 
     event void CommandHandler.printNeighbors(){
-		call Timer0.startPeriodic(250);
+	
 		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
 		
 		
