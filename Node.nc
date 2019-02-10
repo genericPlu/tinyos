@@ -95,6 +95,33 @@ implementation{
          pack* myMsg=(pack*) payload;
          if(myMsg->TTL != 0 && !checkList(myMsg)){ 
 			
+			if (TOS_NODE_ID == myMsg->dest){
+				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
+				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
+				makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, sequence++, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				call list.pushback(sendPackage);
+				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
+				return msg;
+			}
+			else if(myMsg->dest == AM_BROADCAST_ADDR){
+				makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 1, 0, 1, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				call Sender.send(sendPackage, myMsg->src);
+				dbg(NEIGHBOR_CHANNEL, "Neighbor Response Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
+			}
+			else{
+				logPack(myMsg);
+				makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, sequence++,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+				if(TOS_NODE_ID == 1)
+					dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, TOS_NODE_ID + 1);
+				else{
+					dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d and Packet sent from Node %d to Node %d  \n" , TOS_NODE_ID, TOS_NODE_ID -1, TOS_NODE_ID, TOS_NODE_ID + 1);
+					dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
+					dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq); 
+				}
+			
+			}
 		 
 		
 		
@@ -115,7 +142,7 @@ implementation{
    }
 
     event void CommandHandler.printNeighbors(){
-		Timer0.startPeriodic(250);
+		call Timer0.startPeriodic(250);
 		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
 		
 		
