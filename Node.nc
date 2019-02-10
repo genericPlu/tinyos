@@ -106,7 +106,7 @@ implementation{
 			dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq); 
 			return msg;
          }
-		 else if (TOS_NODE_ID == myMsg->dest){
+		 else if (TOS_NODE_ID == 19){
 		    dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 			dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
 			
