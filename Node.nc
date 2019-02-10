@@ -189,7 +189,7 @@ implementation{
 		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 20, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
 		call list.pushback(sendPackage);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-		dbg(NEIGHBOR_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
+		
    }
    
 }
