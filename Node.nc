@@ -93,7 +93,7 @@ implementation{
       
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-         if(myMsg->TTL != 0){ 
+         if(myMsg->TTL != 0 || !checkList(myMsg)){ 
 			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			if(TOS_NODE_ID == 1)
@@ -103,6 +103,7 @@ implementation{
 			else
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d and Packet sent from Node %d to Node %d  \n" , TOS_NODE_ID, TOS_NODE_ID -1, TOS_NODE_ID, TOS_NODE_ID + 1);
 			 
+			return msg;
          }
 		 else if (TOS_NODE_ID == myMsg->dest){
 		    dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
@@ -154,4 +155,16 @@ implementation{
       Package->protocol = protocol;
       memcpy(Package->payload, payload, length);
    }
+   bool checkList(pack *Package){
+		uint16_t i;
+		unint16_t size = call list.size();
+		for( i = 0; i < size; i++){
+			pack current = call PacketList.get(i);
+			if(current.src == Package->src)
+				if(current.seq == Package->seq )
+					return TRUE;
+		}
+		return FALSE;
+   }
+   
 }
