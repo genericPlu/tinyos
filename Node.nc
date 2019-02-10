@@ -117,14 +117,15 @@ implementation{
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d and Packet sent from Node %d to Node %d  \n" , TOS_NODE_ID, TOS_NODE_ID -1, TOS_NODE_ID, TOS_NODE_ID + 1);
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq); 
-		}
+			}
 		
 		
          return msg;
       }
       dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
       return msg;
-   }
+     }
+	}
 		
 
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
