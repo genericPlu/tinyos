@@ -102,25 +102,20 @@ implementation{
 				return msg;
 			}
 			else if (TOS_NODE_ID == myMsg->dest){
+				call list.pushback(*myMsg);
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, sequence++, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-				call list.pushback(sendPackage);
 				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 				return msg;
 			}
 			else{
-				makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, sequence++,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				call list.pushback(sendPackage);
+				dbg(FLOODING_CHANNEL, "Packet Received at Node %d for %d. Rebroadcasting\n", myMsg->src, myMsg->dest);
 				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-				if(TOS_NODE_ID == 1)
-					dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, TOS_NODE_ID + 1);
-				else{
-					dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d and  Node %d  \n" , TOS_NODE_ID, TOS_NODE_ID -1, TOS_NODE_ID+1);
-					dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
-					dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq); 
-					return msg;
-				}
+				
 			
 			}
 		}	
