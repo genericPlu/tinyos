@@ -53,6 +53,8 @@ module Node{
    uses interface Hashmap<uint8_t> as map;
    
    uses interface List<pack> as list;
+   
+   uses interface List<uint_16> as neighborlist;
 }
 
 implementation{
@@ -65,7 +67,9 @@ implementation{
 
    // Prototypes
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
-   bool checkList(pack *Package);
+   bool checkSentList(pack *Package);
+   void printNeighbors();
+   
    event void Boot.booted(){
       call AMControl.start();
 	  
@@ -94,7 +98,7 @@ implementation{
       
       if(len==sizeof(pack)){
         pack* myMsg=(pack*) payload;
-        if(myMsg->TTL != 0 && !checkList(myMsg)){ 
+        if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 			if(myMsg->dest == AM_BROADCAST_ADDR){
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20, 0, 1, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
@@ -143,12 +147,10 @@ implementation{
    }
 
     event void CommandHandler.printNeighbors(){
-	
-		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
+		void printNeighbors();
 		
-		
-   }   
-   
+   }
+
    event void CommandHandler.printRouteTable(){}
 
    event void CommandHandler.printLinkState(){}
@@ -171,7 +173,7 @@ implementation{
       Package->protocol = protocol;
       memcpy(Package->payload, payload, length);
    }
-   bool checkList(pack *Package){
+   bool checkSentList(pack *Package){
 		uint16_t i;
 		for( i = 0; i < call list.size(); i++){
 			pack current = call list.get(i);
@@ -180,6 +182,14 @@ implementation{
 					return TRUE;
 		}
 		return FALSE;
+   }
+   void printNeighbors(){
+        uint8_t *payload;
+		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 20, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+		call list.pushback(sendPackage);
+		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+		dbg(NEIGHBOR_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
    }
    
 }
