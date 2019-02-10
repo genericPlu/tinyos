@@ -102,14 +102,14 @@ implementation{
 				dbg(NEIGHBOR_CHANNEL, "Neighbor Response Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 				return msg;
 			}
-			else if(TOS_NODE_ID == myMsg->dest && myMsg->dest != myMsg->src){
+			else if(TOS_NODE_ID == myMsg->dest){
 				//call list.pushback(*myMsg);
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, --myMsg->TTL, 0, sequence++, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call list.pushback(sendPackage);
 				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
+				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->src);
 				return msg;
 			}
 			else if (myMsg->dest != myMsg->src){
