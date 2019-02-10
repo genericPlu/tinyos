@@ -142,7 +142,7 @@ implementation{
    }
 
     event void CommandHandler.printNeighbors(){
-		startPeriodic(250);
+		Timer0.startPeriodic(250);
 		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
 		
 		
