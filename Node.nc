@@ -110,11 +110,12 @@ implementation{
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, TOS_NODE_ID + 1);
 			else if(TOS_NODE_ID == 19)
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, TOS_NODE_ID -1);
-			else
+			else{
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d and Packet sent from Node %d to Node %d  \n" , TOS_NODE_ID, TOS_NODE_ID -1, TOS_NODE_ID, TOS_NODE_ID + 1);
-			dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
-			dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq); 
-			return msg;
+				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
+				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq); 
+				return msg;
+			}
 		}
 		
 		
