@@ -113,7 +113,7 @@ implementation{
 			else{
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call list.pushback(sendPackage);
-				dbg(FLOODING_CHANNEL, "Packet Received at Node %d for %d. Rebroadcasting\n", myMsg->src, myMsg->dest);
+				dbg(FLOODING_CHANNEL, "Packet Received at Node %d for %d. Resending..\n", myMsg->src, myMsg->dest);
 				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 				
 			
