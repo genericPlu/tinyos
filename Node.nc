@@ -157,9 +157,8 @@ implementation{
    }
    bool checkList(pack *Package){
 		uint16_t i;
-		unint16_t size = call list.size();
-		for( i = 0; i < size; i++){
-			pack current = call PacketList.get(i);
+		for( i = 0; i < call list.size(); i++){
+			pack current = call list.get(i);
 			if(current.src == Package->src)
 				if(current.seq == Package->seq )
 					return TRUE;
