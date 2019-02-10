@@ -95,7 +95,7 @@ implementation{
       if(len==sizeof(pack)){
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkList(myMsg)){ 
-			dbg(FLOODING_CHANNEL, "Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
+			//dbg(FLOODING_CHANNEL, "Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 			if(myMsg->dest == AM_BROADCAST_ADDR){
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 1, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call Sender.send(sendPackage, myMsg->src);
@@ -115,7 +115,7 @@ implementation{
 			else if (myMsg->dest != myMsg->src){
 				makePack(&sendPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call list.pushback(sendPackage);
-				dbg(FLOODING_CHANNEL, "Packet Received at Node %d for Node %d. Resending..\n", myMsg->src, myMsg->dest);
+				dbg(FLOODING_CHANNEL, "Packet Received at Node %d for Node %d. Resending..\n", TOS_NODE_ID, myMsg->dest);
 				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 				return msg;
 			
