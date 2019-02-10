@@ -141,7 +141,7 @@ def main():
     s.addChannel(s.NEIGHBOR_CHANNEL);
     #for src in range(1,20):
     s.runTime(20);
-    s.ping(1, 19, 19); 
+    s.ping(1, 19, 1); 
 	
     s.runTime(20);
     s.neighborDMP(1);
