@@ -104,6 +104,11 @@ implementation{
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 				return msg;
 			}
+			else if(myMsg->dest == AM_BROADCAST_ADDR){
+				makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 1, 0, 1, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				call Sender.send(sendPackage, myMsg->src);
+				dbg(NEIGHBOR_CHANNEL, "Neighbor Response Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
+			}
 			else{
 				logPack(myMsg);
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, sequence++,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
@@ -137,8 +142,10 @@ implementation{
    }
 
     event void CommandHandler.printNeighbors(){
+		startPeriodic(250);
 		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
-	
+		
+		
    }   
    
    event void CommandHandler.printRouteTable(){}
