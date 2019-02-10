@@ -18,8 +18,7 @@ implementation {
     components Node;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
     components new TimerMilliC() as Timer0;
-    components new ListC(uint8_t,20) as list;
-	 
+    components new ListC(pack,20) as list;
     Node -> MainC.Boot;
 	
     Node.Receive -> GeneralReceive;

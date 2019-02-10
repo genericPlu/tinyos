@@ -7,6 +7,30 @@
  * @date   2013/09/03
  *
  */
+ 
+ /*
+ Flooding:
+ 1.Broadcast a packet
+ Given in the pdf. 
+ Mangaged to rebroadcast but thats about it.
+ 2.make alist of sent packets?
+ Cant seem to get this one done.
+ 3.if not in list rebroadcast packet? 
+ Cant figure out getting the list of src and seq right.
+ Not sure im doing anything right here.
+ 4. TTL? no idea how implement
+ 
+ Neighbor Discovery:
+ Wont even finish flooding, SO doubt I will get to attempt this.
+ This Project is clearly just betond my abililties.
+ Guess the JC didnt prepare me well enough coding wise.
+ I cant understand this code.....way to much. 
+ I know some c and some c++ but clearly not enough.
+ Barely can make sense out of this. Did my best.
+ Never really worked on any code this complex. 
+ I will likely fail or have to withdraw.
+
+ */
 #include <Timer.h>
 #include "includes/command.h"
 #include "includes/packet.h"
@@ -26,16 +50,15 @@ module Node{
    
    uses interface Timer<TMilli> as Timer0;
    
-   uses interface List<uint8_t> as list;
+   uses interface Hashmap<uint8_t> as map;
+   
+   uses interface List<pack> as list;
 }
 
 implementation{
    uint8_t counter = 0;
    uint8_t sequence = 1;
-   typedef struct packetlist{
-		uint16_t src;
-		uint16_t seq;
-	};
+  
  
    
    pack sendPackage;
@@ -68,11 +91,14 @@ implementation{
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
       
-	  dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
+	  
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-		 if (TOS_NODE_ID != myMsg->dest){
-			dbg(GENERAL_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
+		 list.pushback(myMsg->seq);
+		 map.insert(myMsg->seq,myMsg->src); 
+		 else if (TOS_NODE_ID == myMsg->dest){
+		    dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
+			dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
 			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 0, 0, sequence++, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			if(TOS_NODE_ID == 1)
@@ -94,7 +120,7 @@ implementation{
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
 	  /*call Timer0.startOneShot(25);*/
       dbg(GENERAL_CHANNEL, "PING EVENT \n");
-      makePack(&sendPackage, TOS_NODE_ID, destination, 25, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
+      makePack(&sendPackage, TOS_NODE_ID, destination, 20, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 	  dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
    }
