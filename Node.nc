@@ -112,7 +112,7 @@ implementation{
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 				return msg;
 			}
-			else{
+			else if (myMsg->dest != myMsg->src){
 				makePack(&sendPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call list.pushback(sendPackage);
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d for Node %d. Resending..\n", myMsg->src, myMsg->dest);
