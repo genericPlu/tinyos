@@ -94,7 +94,7 @@ implementation{
       
 	if(len==sizeof(pack)){
 		pack* myMsg=(pack*) payload;
-		dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
+		
 		if(myMsg->TTL == 0 || checkList(myMsg)){ 
 			return msg;
 		}
