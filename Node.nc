@@ -93,7 +93,7 @@ implementation{
       
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-         if(myMsg->TTL != 0 || !checkList(myMsg)){ 
+         if(myMsg->TTL != 0 && !checkList(myMsg)){ 
 			logPack(myMsg);
 			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,(uint8_t*) payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
