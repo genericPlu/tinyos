@@ -54,7 +54,7 @@ module Node{
    
    uses interface List<pack> as list;
    
-   uses interface List<uint_16> as neighborlist;
+   uses interface List<uint16_t> as neighborlist;
 }
 
 implementation{
