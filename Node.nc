@@ -97,14 +97,14 @@ implementation{
 			
 			return msg;
          }
-		 else if (TOS_NODE_ID == 19){
+		 else if (TOS_NODE_ID == myMsg->dest){
 		    dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 			dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
 			
 			return msg;
 		}
 		else{
-			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, sequence, payload, PACKET_MAX_PAYLOAD_SIZE);
+			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,(uint8_t*) payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 			if(TOS_NODE_ID == 1)
 				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, TOS_NODE_ID + 1);
