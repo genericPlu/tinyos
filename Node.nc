@@ -124,8 +124,10 @@ implementation{
 				}
 			
 			}
-			return msg;
 		}	
+		else{
+			return msg;
+		}
 		
 	  }
       dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
