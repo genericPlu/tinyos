@@ -142,7 +142,7 @@ def main():
     i = 1
     #for src in range(1,20):
     s.runTime(20);
-    s.ping(1, 19, 19); 
+    #s.ping(1, 19, 19); 
 	
     s.runTime(20);
     s.neighborDMP(1);
