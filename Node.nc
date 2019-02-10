@@ -147,7 +147,7 @@ implementation{
    }
 
     event void CommandHandler.printNeighbors(){
-		void printNeighbors();
+		printNeighbors();
 		
    }
 
