@@ -93,7 +93,7 @@ implementation{
       
       if(len==sizeof(pack)){
          pack* myMsg=(pack*) payload;
-         if(myMsg->TTL == 0 || !checkList(myMsg)){ 
+         if(myMsg->TTL == 0 || checkList(myMsg)){ 
 			
 			return msg;
          }
