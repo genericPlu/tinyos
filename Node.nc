@@ -100,7 +100,10 @@ implementation{
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
-			if(myMsg->dest == AM_BROADCAST_ADDR){
+			if(myMsg->seq == 255){
+			    dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d \n" , myMsg->src, TOS_NODE_ID);
+			}
+			else if(myMsg->dest == AM_BROADCAST_ADDR){
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20, 0, 1, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call Sender.send(sendPackage, myMsg->src);
 				dbg(NEIGHBOR_CHANNEL, "Neighbor Response Node %d to Node %d \n" , TOS_NODE_ID, myMsg->src);
@@ -186,8 +189,7 @@ implementation{
    void printNeighbors(){
         uint8_t *payload;
 		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
-		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 20, 0, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
-		call list.pushback(sendPackage);
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 20, 255, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 		
    }
