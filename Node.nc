@@ -125,6 +125,7 @@ implementation{
 			}
 		}	
 		else{
+			dbg(FLOODING_CHANNEL, "Dropping packet seq#%d from %d\n", myMsg->seq, myMsg->src); 
 			return msg;
 		}
 		
