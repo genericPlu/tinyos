@@ -61,7 +61,7 @@ implementation{
    event void Boot.booted(){
       call AMControl.start();
 	  
-	  call Timer0.startPeriodic(call Random.rand32() % 2000);
+	  call Timer0.startPeriodic(call Random.rand32() % 1000000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
