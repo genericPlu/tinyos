@@ -182,15 +182,15 @@ implementation{
    }
 
    void createNeighborsList(){
-		uint8_t payload;
-		uint16_t i;
+		//uint8_t payload;
+		//uint16_t i;
 		//Clear list?
 		/*
 		for(i=0; i< call list.size(); i++){
 			call list.popfront();
 		}
 		*/
-		dbg(NEIGHBOR_CHANNEL, "Creating/updating neighbor list...\n");
+		//dbg(NEIGHBOR_CHANNEL, "Creating/updating neighbor list...\n");
 		/*
 		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 0, 1, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
 		call list.pushback(sendPackage);
