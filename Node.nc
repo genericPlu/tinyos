@@ -88,7 +88,7 @@ implementation{
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
 			if(myMsg->seq == 999){
-				dbg(NEIGHBOR_CHANNEL, "Node %d  \n" , TOS_NODE_ID);
+				dbg(NEIGHBOR_CHANNEL, "receiveing Node %d  \n" , TOS_NODE_ID);
 				if( call neighborMap.contains(TOS_NODE_ID) == FALSE){
 					dbg(NEIGHBOR_CHANNEL, "inserting Node %d  \n" , TOS_NODE_ID);
 					call neighborMap.insert(myMsg->src,TOS_NODE_ID);
@@ -97,7 +97,7 @@ implementation{
 				//a[TOS_NODE_ID][counter++] = myMsg->src;
 			}
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
-				//dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
+				dbg(NEIGHBOR_CHANNEL, "recieveing Node %d resending Node %d  \n" , TOS_NODE_ID, myMsg->src);
 
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call Sender.send(sendPackage, myMsg->src);
