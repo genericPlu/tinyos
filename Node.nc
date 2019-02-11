@@ -54,7 +54,7 @@ module Node{
    
    uses interface List<pack> as list;
    
-   uses interface List<uint16_t> as neighborlist;
+   uses interface List<uint16_t> as neighborList;
 }
 
 implementation{
@@ -68,7 +68,8 @@ implementation{
    // Prototypes
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
    bool checkSentList(pack *Package);
-   void printNeighbors();
+   void createNeighborsList();
+   
    
    event void Boot.booted(){
       call AMControl.start();
@@ -78,7 +79,7 @@ implementation{
    }
    
    event void Timer0.fired(){
-
+       createNeighborsList();
 
    }
  
@@ -100,12 +101,12 @@ implementation{
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
-			if(myMsg->seq == 255){
+			if(myMsg->seq == 999){
 				dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
 				return msg;
 			}
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
-				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 255, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call Sender.send(sendPackage, myMsg->src);
 				//dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
 				return msg;
@@ -151,7 +152,6 @@ implementation{
    }
 
     event void CommandHandler.printNeighbors(){
-		printNeighbors();
 		
    }
 
@@ -188,11 +188,16 @@ implementation{
 		return FALSE;
    }
    void printNeighbors(){
-        uint8_t *payload;
-		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
-		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 20, 255, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
-		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+        
 		
+   }
+   
+   void createNeighborsList(){
+		uint8_t *payload;
+		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...");
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+   
    }
    
 }
