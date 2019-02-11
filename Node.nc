@@ -37,7 +37,7 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-//#define TTL = 20;
+#define HOPS = 20;
 module Node{
    uses interface Boot;
 
