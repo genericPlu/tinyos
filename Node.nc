@@ -66,7 +66,7 @@ implementation{
    }
    
    event void Timer0.fired(){
-       createNeighborsList();
+       //createNeighborsList();
 	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
 
    }
