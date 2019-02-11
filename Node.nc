@@ -87,7 +87,7 @@ implementation{
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
-			if(myMsg->dest == AM_BROADCAST_ADDR){
+			if(myMsg->dest == AM_BROADCAST_ADDR && call neighborMap.size() ! = 19){
 				dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
 				call neighborList.pushback(TOS_NODE_ID);
 				call neighborMap.insert(TOS_NODE_ID,myMsg->src);
