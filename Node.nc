@@ -144,7 +144,7 @@ implementation{
 		createNeighborsList();
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		for(i = 0; i< call neighborList.size(); i++){
-			dbg(NEIGHBOR_CHANNEL, "Neighbor: %d", call neighborList.get(i));
+			dbg(NEIGHBOR_CHANNEL, "Neighbor: %d", call neighborList.popfront());
 		}
 	}
 
