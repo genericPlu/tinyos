@@ -180,7 +180,7 @@ implementation{
    void createNeighborsList(){
 		uint8_t *payload;
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
-		uint16_t i;
+		//uint16_t i;
 		//for(i = ; i < call list.size(); i++){
 			//makePack(&sendPackage, TOS_NODE_ID++, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
 			//call Sender.send(sendPackage, AM_BROADCAST_ADDR);
