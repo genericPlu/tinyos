@@ -40,7 +40,7 @@ module Node{
    
    uses interface List<pack> as list;
    
-   uses interface List<uint16_t> as neighborList;
+   uses interface List<uint16_t*> as neighborList;
    
  
 }
@@ -48,7 +48,7 @@ module Node{
 implementation{
    uint8_t counter = 0;
    uint8_t sequence = 0;
-
+   uint16_t* neighbors;
    
    pack sendPackage;
 
@@ -68,7 +68,7 @@ implementation{
    event void Timer0.fired(){
        //createNeighborsList();
 	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
-	   call Timer0.stop();
+	   //call Timer0.stop();
 
    }
  
