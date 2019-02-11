@@ -88,7 +88,7 @@ implementation{
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 			if(myMsg->seq == 999){
-				//dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
+				dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
 				call neighborList.pushback(TOS_NODE_ID);
 				call neighborMap.insert(TOS_NODE_ID,myMsg->src);
 				makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
@@ -147,7 +147,6 @@ implementation{
     event void CommandHandler.printNeighbors(){
 		uint16_t i;
 		for(i = 0; i< call neighborMap.size(); i++){
-			
 			dbg(NEIGHBOR_CHANNEL, "Node %d\n" , call neighborMap.get(i));
 		}
     }
