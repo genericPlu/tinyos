@@ -39,15 +39,15 @@ module Node{
    uses interface List<pack> as list;
    
    uses interface List<uint16_t> as neighborList;
-   uses interface List<List<uint16_t>> as neighborList2;
+   
  
 }
 
 implementation{
    uint8_t counter = 0;
    uint8_t sequence = 0;
-   //uint16_ a[20][20];
- 
+
+   neighborList a[20];
    
    pack sendPackage;
 
