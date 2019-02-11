@@ -46,7 +46,7 @@ module Node{
 implementation{
    uint8_t counter = 0;
    uint8_t sequence = 0;
-   uint16_ a[20][20];
+   //uint16_ a[20][20];
  
    
    pack sendPackage;
@@ -89,7 +89,7 @@ implementation{
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
 			if(myMsg->seq == 999){
-				a[TOS_NODE_ID][counter++] = myMsg->src;
+				//a[TOS_NODE_ID][counter++] = myMsg->src;
 			}
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
 				//dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);

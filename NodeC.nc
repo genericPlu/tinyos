@@ -20,6 +20,7 @@ implementation {
     components new TimerMilliC() as Timer0;
     components new ListC(pack,20) as list;
 	components new ListC(uint16_t,20) as neighborList;
+	components new ListC(ListC(uint16_t,20),20) as neighborList;
 	components new HashmapC(uint16_t,20) as neighborMap;
 
     Node -> MainC.Boot;
@@ -30,6 +31,7 @@ implementation {
     Node.Timer0 -> Timer0;        
     Node.list -> list; 
 	Node.neighborList ->neighborList;
+	Node.neighborList ->neighborList2;
     Node.neighborMap ->neighborMap;
 
     components ActiveMessageC;
