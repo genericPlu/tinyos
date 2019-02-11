@@ -180,7 +180,6 @@ implementation{
    }
 
    void createNeighborsList(){
-		uint8_t payload = 999;
 		uint16_t i;
 		//Clear list?
 		for(i=0; i< call list.size(); i++){
