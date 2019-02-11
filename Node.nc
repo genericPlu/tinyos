@@ -100,21 +100,17 @@ implementation{
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
-			if(myMsg->seq == 255){
-				dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
-				return msg;
-			}
-			else if(myMsg->dest == AM_BROADCAST_ADDR){
+			if(myMsg->dest == AM_BROADCAST_ADDR){
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 1, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call Sender.send(sendPackage, myMsg->src);
 				//dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
 				return msg;
 			}
 			else if(TOS_NODE_ID == myMsg->dest){
-				call list.pushback(*myMsg);
+				//call list.pushback(*myMsg);
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence %d\n", myMsg->payload, myMsg->seq);
-				sequence = 0;
+				//sequence = 0;
 				//makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20, 0, ++sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				//call list.pushback(sendPackage);
 				//call Sender.send(sendPackage, AM_BROADCAST_ADDR);
