@@ -87,7 +87,7 @@ implementation{
    event void AMControl.startDone(error_t err){
       if(err == SUCCESS){
          dbg(GENERAL_CHANNEL, "Radio On\n");
-		 call Timer0.startPeriodic(400000);
+		 call Timer0.startPeriodic(380000);
       }else{
          //Retry until successful
          call AMControl.start();
