@@ -59,7 +59,7 @@ implementation{
    event void Boot.booted(){
       call AMControl.start();
 	  
-	  call Timer0.startPeriodic(750000);
+	  call Timer0.startPeriodic(50000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
