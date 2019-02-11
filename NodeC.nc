@@ -20,8 +20,7 @@ implementation {
     components new TimerMilliC() as Timer0;
     components new ListC(pack,20) as list;
 	components new ListC(uint16_t,20) as neighborList;
-	components new ListC(ListC<uint16_t>,20) as neighborList2;
-	
+
     Node -> MainC.Boot;
 	
     Node.Receive -> GeneralReceive;
@@ -30,7 +29,7 @@ implementation {
     Node.Timer0 -> Timer0;        
     Node.list -> list; 
 	Node.neighborList ->neighborList;
-	Node.neighborList2 ->neighborList2;
+
 
     components ActiveMessageC;
     Node.AMControl -> ActiveMessageC;
