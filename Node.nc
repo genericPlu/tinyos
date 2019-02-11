@@ -136,9 +136,9 @@ implementation{
 		uint16_t i;
 		for(i = 0; i< call neighborList.size(); i++){
 			
-			dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , call neighborList.get(i++), call neighborList.get(i));
+			dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , call neighborList.popfront(), call neighborList.popfront();
 		}
-   }
+    }
 
    event void CommandHandler.printRouteTable(){}
 
