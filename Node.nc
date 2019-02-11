@@ -97,7 +97,7 @@ implementation{
 				call list.pushback(sendPackage);
 				call Sender.send(sendPackage, myMsg->src);
 				*/
-				call neighborList.pushfront(TOS_NODE_ID);
+				//call neighborList.pushfront(TOS_NODE_ID);
 				return msg;
 			}
 			else if(TOS_NODE_ID == myMsg->dest){
