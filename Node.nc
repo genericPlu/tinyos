@@ -87,20 +87,12 @@ implementation{
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
-			if(myMsg->seq == 999){
-				dbg(NEIGHBOR_CHANNEL, "receiveing Node %d  \n" , TOS_NODE_ID);
-				if( call neighborMap.contains(TOS_NODE_ID) == FALSE){
-					dbg(NEIGHBOR_CHANNEL, "inserting Node %d  \n" , TOS_NODE_ID);
-					call neighborMap.insert(myMsg->src,TOS_NODE_ID);
-				}
-				
-				//a[TOS_NODE_ID][counter++] = myMsg->src;
-			}
-			else if(myMsg->dest == AM_BROADCAST_ADDR){
+			if(myMsg->dest == AM_BROADCAST_ADDR){
 				dbg(NEIGHBOR_CHANNEL, "recieveing Node %d resending Node %d  \n" , TOS_NODE_ID, myMsg->src);
-
-				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, --myMsg->TTL, 0, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				call list.pushback(sendPackage);
 				call Sender.send(sendPackage, myMsg->src);
+				call neighborList.pushback(TOS_NODE_ID);
 				return msg;
 			}
 			else if(TOS_NODE_ID == myMsg->dest){
@@ -147,10 +139,11 @@ implementation{
 
     event void CommandHandler.printNeighbors(){
 		uint16_t i;
-		for(i = 1; i< call neighborMap.size(); i++){
-			dbg(NEIGHBOR_CHANNEL, "Node %d\n" , call neighborMap.get(i));
+		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
+		for(i = 1; i< call neighborlist.size(); i++){
+			dbg(NEIGHBOR_CHANNEL, "Neighbor: %d", call neighborList.get(i));
 		}
-    }
+	
 
    event void CommandHandler.printRouteTable(){}
 
@@ -186,15 +179,17 @@ implementation{
    }
 
    void createNeighborsList(){
-		uint8_t *payload;
+		uint8_t payload = 999;
 		uint16_t i;
-		dbg(NEIGHBOR_CHANNEL, "Creating/updating neighbor list...\n");
-		for(i = 1; i < 20; i++){
-			counter = 0;
-			dbg(NEIGHBOR_CHANNEL, "sending...\n");
-			makePack(&sendPackage, i, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
-			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+		//Clear list?
+		for(i=0; i< call list.size(); i++){
+			popfront();
 		}
+		dbg(NEIGHBOR_CHANNEL, "Creating/updating neighbor list...\n");
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 1, 0, (uint_8*)payload, PACKET_MAX_PAYLOAD_SIZE);
+		call list.pushback(sendPackage);
+		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+	
 		
    }
    
