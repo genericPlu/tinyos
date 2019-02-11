@@ -47,7 +47,6 @@ implementation{
    uint8_t counter = 0;
    uint8_t sequence = 0;
 
-   neighborList a[20];
    
    pack sendPackage;
 
@@ -87,8 +86,13 @@ implementation{
       if(len==sizeof(pack)){
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
-			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
+			dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
 			if(myMsg->seq == 999){
+				if( call neighborMap.contains(TOS_NODE_ID) == FALSE){
+					dbg(NEIGHBOR_CHANNEL, "inserting Node %d  \n" , TOS_NODE_ID);
+					call neighborMap.insert(myMsg->src,TOS_NODE_ID);
+				}
+				
 				//a[TOS_NODE_ID][counter++] = myMsg->src;
 			}
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
