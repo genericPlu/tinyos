@@ -78,7 +78,7 @@ implementation{
          call AMControl.start();
       }
    }
-
+ 
    event void AMControl.stopDone(error_t err){}
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
@@ -91,8 +91,8 @@ implementation{
 				dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
 				call neighborList.pushback(TOS_NODE_ID);
 				call neighborMap.insert(TOS_NODE_ID,myMsg->src);
-				makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				call Sender.send(sendPackage, myMsg->src);
 				return msg;
 			}
 			else if(TOS_NODE_ID == myMsg->dest){
@@ -180,9 +180,12 @@ implementation{
    void createNeighborsList(){
 		uint8_t *payload;
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
-		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
-		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-   
+		uint16_t i;
+		for(i = 0; i< 20; i++){
+			makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+		}
+		
    }
    
 }
