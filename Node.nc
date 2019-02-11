@@ -81,13 +81,13 @@ implementation{
 			//dbg(FLOODING_CHANNEL, "Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 			if(myMsg->seq == 999){
 				dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
-				call neighborList.pushfront(TOS_NODE_ID);
+				call neighborList.pushback(TOS_NODE_ID);
 				return msg;
 			}
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-				call neighborList.pushback(TOS_NODE_ID);
+				call neighborList.pushfront(TOS_NODE_ID);
 				return msg;
 				
 			}
