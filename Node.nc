@@ -181,6 +181,7 @@ implementation{
 
    void createNeighborsList(){
 		uint16_t i;
+		uint8_t payload = 999;
 		//Clear list?
 		for(i=0; i< call list.size(); i++){
 			call list.popfront();
