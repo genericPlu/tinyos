@@ -187,7 +187,7 @@ implementation{
 			call list.popfront();
 		}
 		dbg(NEIGHBOR_CHANNEL, "Creating/updating neighbor list...\n");
-		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 1, 0, (uint_8*)payload, PACKET_MAX_PAYLOAD_SIZE);
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 1, 0, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
 		call list.pushback(sendPackage);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 	
