@@ -59,7 +59,7 @@ implementation{
    event void Boot.booted(){
       call AMControl.start();
 	  
-	  call Timer0.startPeriodic(350000);
+	  call Timer0.startPeriodic(1000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
@@ -179,12 +179,13 @@ implementation{
 
    void createNeighborsList(){
 		uint8_t *payload;
+		uint16_t i;
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
-		//uint16_t i;
-		//for(i = ; i < call list.size(); i++){
-			//makePack(&sendPackage, TOS_NODE_ID++, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
-			//call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-		//}
+		uint16_t i;
+		for(i = ; i < call list.size(); i++){
+			makePack(&sendPackage, i, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+		}
 		
    }
    
