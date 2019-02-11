@@ -37,7 +37,7 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-#define HOPS = 20;
+//#define HOPS = 20;
 module Node{
    uses interface Boot;
 
@@ -117,7 +117,7 @@ implementation{
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence %d\n", myMsg->payload, myMsg->seq);
 				//sequence = 0;
-				//makePack(&sendPackage, TOS_NODE_ID, myMsg->src, HOPS, 0, ++sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				//makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20, 0, ++sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				//call list.pushback(sendPackage);
 				//call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 				//dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->src);
@@ -146,7 +146,7 @@ implementation{
 
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
       dbg(GENERAL_CHANNEL, "PING EVENT \n");
-      makePack(&sendPackage, TOS_NODE_ID, destination, HOPS, 0, ++sequence, payload, PACKET_MAX_PAYLOAD_SIZE);
+      makePack(&sendPackage, TOS_NODE_ID, destination, 20, 0, ++sequence, payload, PACKET_MAX_PAYLOAD_SIZE);
 	  call list.pushback(sendPackage);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 	  dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
@@ -192,7 +192,7 @@ implementation{
    void createNeighborsList(){
 		uint8_t *payload;
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
-		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, HOPS, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
    
    }
