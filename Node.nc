@@ -45,7 +45,7 @@ module Node{
 implementation{
    uint8_t counter = 0;
    uint8_t sequence = 0;
-   
+   uint16_ a[20][20];
  
    
    pack sendPackage;
@@ -87,10 +87,12 @@ implementation{
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
-			if(myMsg->dest == AM_BROADCAST_ADDR){
-				dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
-				call neighborList.pushback(TOS_NODE_ID);
-				call neighborMap.insert(TOS_NODE_ID,myMsg->src);
+			if(myMsg->seq == 999){
+				a[TOS_NODE_ID][counter++] = myMsg->src;
+			}
+			else if(myMsg->dest == AM_BROADCAST_ADDR){
+				//dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
+
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call Sender.send(sendPackage, myMsg->src);
 				return msg;
@@ -180,8 +182,9 @@ implementation{
    void createNeighborsList(){
 		uint8_t *payload;
 		uint16_t i;
-		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
+		dbg(NEIGHBOR_CHANNEL, "Creating/updating neighbor list...\n");
 		for(i = 1; i < call list.size(); i++){
+			counter = 0;
 			makePack(&sendPackage, i, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 		}
