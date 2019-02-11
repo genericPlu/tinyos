@@ -86,7 +86,7 @@ implementation{
    event void AMControl.startDone(error_t err){
       if(err == SUCCESS){
          dbg(GENERAL_CHANNEL, "Radio On\n");
-		 call Timer0.startPeriodic(500);
+		 call Timer0.startPeriodic(2000);
       }else{
          //Retry until successful
          call AMControl.start();
@@ -190,7 +190,7 @@ implementation{
 
    void createNeighborsList(){
 		uint8_t *payload;
-		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...");
+		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
 		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
    
