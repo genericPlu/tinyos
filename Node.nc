@@ -65,7 +65,7 @@ implementation{
    
    event void Timer0.fired(){
        createNeighborsList();
-	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
+	   dbg(GENERAL_CHANNEL, "1 sec TIMER FIRED\n");
 
    }
  
@@ -87,7 +87,7 @@ implementation{
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
-			if(myMsg->dest == AM_BROADCAST_ADDR && call neighborMap.size() != 19){
+			if(myMsg->dest == AM_BROADCAST_ADDR){
 				dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
 				call neighborList.pushback(TOS_NODE_ID);
 				call neighborMap.insert(TOS_NODE_ID,myMsg->src);
