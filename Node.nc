@@ -146,7 +146,7 @@ implementation{
 
     event void CommandHandler.printNeighbors(){
 		uint16_t i;
-		for(i = 0; i< call neighborMap.size(); i++){
+		for(i = 1; i< call neighborMap.size(); i++){
 			dbg(NEIGHBOR_CHANNEL, "Node %d\n" , call neighborMap.get(i));
 		}
     }
