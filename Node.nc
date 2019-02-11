@@ -79,7 +79,7 @@ implementation{
    }
    
    event void Timer0.fired(){
-       createNeighborsList();
+       //createNeighborsList();
 
    }
  
