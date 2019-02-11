@@ -139,10 +139,9 @@ implementation{
 
     event void CommandHandler.printNeighbors(){
 		uint16_t i;
+		
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
-		for(i = 1; i< call neighborList.size(); i++){
-			dbg(NEIGHBOR_CHANNEL, "Neighbor: %d", call neighborList.get(i));
-		}
+		
 	
 
    event void CommandHandler.printRouteTable(){}
