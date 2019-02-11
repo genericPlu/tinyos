@@ -143,7 +143,7 @@ def main():
     s.runTime(20);
     s.ping(1, 19, 1); 
 	
-    s.runTime(20);
+    s.runTime(60);
     s.neighborDMP(1);
     s.runTime(20);
 	
