@@ -64,7 +64,7 @@ implementation{
    }
    
    event void Timer0.fired(){
-       createNeighborsList();
+       //createNeighborsList();
 	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
 
    }
@@ -141,7 +141,7 @@ implementation{
 
     event void CommandHandler.printNeighbors(){
 		uint16_t i;
-		
+		createNeighborsList();
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		for(i = 0; i< call neighborList.size(); i++){
 			dbg(NEIGHBOR_CHANNEL, "%d is %d 's neighbor", call neighborList.get(i), TOS_NODE_ID);
@@ -182,7 +182,7 @@ implementation{
    }
 
    void createNeighborsList(){
-		uint8_t payload = 999;
+		uint8_t payload;
 		uint16_t i;
 		//Clear list?
 		/*
