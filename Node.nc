@@ -88,13 +88,13 @@ implementation{
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
 			if(myMsg->dest == AM_BROADCAST_ADDR){
-				//dbg(NEIGHBOR_CHANNEL, "recieveing Node %d resending Node %d  \n" , TOS_NODE_ID, myMsg->src);
+				dbg(NEIGHBOR_CHANNEL, "inserting Node %d into neighbor list  \n" , TOS_NODE_ID);
 				/*
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, --myMsg->TTL, 0, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call list.pushback(sendPackage);
 				call Sender.send(sendPackage, myMsg->src);
 				*/
-				call neighborList.pushback(TOS_NODE_ID);
+				call neighborList.pushfront(TOS_NODE_ID);
 				return msg;
 			}
 			else if(TOS_NODE_ID == myMsg->dest){
