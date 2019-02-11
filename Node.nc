@@ -56,7 +56,7 @@ implementation{
    }
    
    event void Timer0.fired(){
-       createNeighborsList();
+       //createNeighborsList();
 	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
 
    }
@@ -86,7 +86,7 @@ implementation{
 			}
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-				call Sender.send(sendPackage, myMsg->src);
+				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 				call neighborList.pushback(TOS_NODE_ID);
 				return msg;
 				
