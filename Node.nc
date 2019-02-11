@@ -7,37 +7,14 @@
  * @date   2013/09/03
  *
  */
- 
- /*
- Flooding:
- 1.Broadcast a packet
- Given in the pdf. 
- Mangaged to rebroadcast but thats about it.
- 2.make alist of sent packets?
- Cant seem to get this one done.
- 3.if not in list rebroadcast packet? 
- Cant figure out getting the list of src and seq right.
- Not sure im doing anything right here.
- 4. TTL? no idea how implement
- 
- Neighbor Discovery:
- Wont even finish flooding, SO doubt I will get to attempt this.
- This Project is clearly just betond my abililties.
- Guess the JC didnt prepare me well enough coding wise.
- I cant understand this code.....way to much. 
- I know some c and some c++ but clearly not enough.
- Barely can make sense out of this. Did my best.
- Never really worked on any code this complex. 
- I will likely fail or have to withdraw.
 
- */
 #include <Timer.h>
 #include "includes/command.h"
 #include "includes/packet.h"
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-//#define HOPS = 20;
+
 module Node{
    uses interface Boot;
 
@@ -60,7 +37,7 @@ module Node{
 implementation{
    uint8_t counter = 0;
    uint8_t sequence = 0;
-  
+   
  
    
    pack sendPackage;
@@ -104,13 +81,15 @@ implementation{
 			//dbg(FLOODING_CHANNEL, "Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 			if(myMsg->seq == 999){
 				dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
+				call neighborList.pushfront(TOS_NODE_ID);
 				return msg;
 			}
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call Sender.send(sendPackage, myMsg->src);
-				//dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
+				call neighborList.pushback(TOS_NODE_ID);
 				return msg;
+				
 			}
 			else if(TOS_NODE_ID == myMsg->dest){
 				//call list.pushback(*myMsg);
@@ -150,10 +129,15 @@ implementation{
 	  call list.pushback(sendPackage);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 	  dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
+	  
    }
 
     event void CommandHandler.printNeighbors(){
-		
+		uint16_t i;
+		for(i = 0; i< call neighborList.size(); i++){
+			
+			dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , neighborList.get(i++), neighborList.get(i));
+		}
    }
 
    event void CommandHandler.printRouteTable(){}
