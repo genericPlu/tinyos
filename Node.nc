@@ -91,6 +91,8 @@ implementation{
 				//dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
 				call neighborList.pushback(TOS_NODE_ID);
 				call neighborMap.insert(TOS_NODE_ID,myMsg->src);
+				makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 				return msg;
 			}
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
