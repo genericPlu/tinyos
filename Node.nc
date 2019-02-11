@@ -86,7 +86,7 @@ implementation{
       if(len==sizeof(pack)){
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
-			dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
+			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
 			if(myMsg->dest == AM_BROADCAST_ADDR && call neighborMap.size() != 19){
 				dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
 				call neighborList.pushback(TOS_NODE_ID);
@@ -168,7 +168,7 @@ implementation{
    }
    bool checkSentList(pack *Package){
 		uint16_t i;
-		for( i = 0; i < call list.size(); i++){
+		for(i = 0; i < call list.size(); i++){
 			pack current = call list.get(i);
 			if(current.src == Package->src)
 				if(current.seq == Package->seq )
@@ -180,7 +180,11 @@ implementation{
    void createNeighborsList(){
 		uint8_t *payload;
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
-	
+		uint16_t k;
+		for(k = 1; k< 20; k++){
+			
+		}
+		
    }
    
 }
