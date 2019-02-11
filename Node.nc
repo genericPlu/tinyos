@@ -34,11 +34,11 @@ module Node{
    
    uses interface Timer<TMilli> as Timer0;
    
-   uses interface Hashmap<uint8_t> as map;
+   uses interface Hashmap<uint16_t> as neighborMap;
    
    uses interface List<pack> as list;
    
-   uses interface List<uint16_t[20]> as neighborList;
+   uses interface List<uint16_t> as neighborList;
  
 }
 
@@ -90,16 +90,18 @@ implementation{
 			if(myMsg->seq == 999){
 				//dbg(NEIGHBOR_CHANNEL, "Node %d is a neighbor of Node %d  \n" , TOS_NODE_ID, myMsg->src);
 				call neighborList.pushback(TOS_NODE_ID);
+				call neighborMap.insert(TOS_NODE_ID,myMsg->src);
 				return msg;
 			}
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 1, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+				call Sender.send(sendPackage, myMsg->src);
 				call neighborList.pushfront(TOS_NODE_ID);
 				return msg;
-				
+				   
 			}
 			else if(TOS_NODE_ID == myMsg->dest){
+
 				//call list.pushback(*myMsg);
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence %d\n", myMsg->payload, myMsg->seq);
@@ -142,9 +144,9 @@ implementation{
 
     event void CommandHandler.printNeighbors(){
 		uint16_t i;
-		for(i = 0; i< call neighborList.size(); i++){
+		for(i = 0; i< call neighborMap.size(); i++){
 			
-			dbg(NEIGHBOR_CHANNEL, "Node %d\n" , call neighborList.get(i));
+			dbg(NEIGHBOR_CHANNEL, "Node %d\n" , call neighborMap.get(i));
 		}
     }
 
