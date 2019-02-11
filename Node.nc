@@ -191,6 +191,7 @@ implementation{
 		dbg(NEIGHBOR_CHANNEL, "Creating/updating neighbor list...\n");
 		for(i = 1; i < 20; i++){
 			counter = 0;
+			dbg(NEIGHBOR_CHANNEL, "sending...\n");
 			makePack(&sendPackage, i, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 		}
