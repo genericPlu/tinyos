@@ -193,7 +193,7 @@ implementation{
 		dbg(NEIGHBOR_CHANNEL, "Creating/updating neighbor list...\n");
 		
 		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 0, 1, payload, PACKET_MAX_PAYLOAD_SIZE);
-		call list.pushback(sendPackage);
+		//call list.pushback(sendPackage);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 		
 		
