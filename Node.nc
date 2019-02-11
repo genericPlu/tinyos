@@ -64,8 +64,8 @@ implementation{
    }
    
    event void Timer0.fired(){
-       //createNeighborsList();
-	   //dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
+       createNeighborsList();
+	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
 
    }
  
@@ -141,10 +141,10 @@ implementation{
 
     event void CommandHandler.printNeighbors(){
 		uint16_t i;
-		createNeighborsList();
+		
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		for(i = 0; i< call neighborList.size(); i++){
-			dbg(NEIGHBOR_CHANNEL, "%d is %d 's neighbor", call neighborList.get(i), TOS_NODE_ID);
+			dbg(NEIGHBOR_CHANNEL, "%d", call neighborList.get(i));
 		}
 	}
 
@@ -182,8 +182,8 @@ implementation{
    }
 
    void createNeighborsList(){
-		uint8_t* payload;
-		//uint16_t i;
+		uint8_t payload = 999;
+		uint16_t i;
 		//Clear list?
 		/*
 		for(i=0; i< call list.size(); i++){
@@ -191,11 +191,10 @@ implementation{
 		}
 		*/
 		dbg(NEIGHBOR_CHANNEL, "Creating/updating neighbor list...\n");
-		
-		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 0, 1, payload, PACKET_MAX_PAYLOAD_SIZE);
-		//call list.pushback(sendPackage);
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 0, 1, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
+		call list.pushback(sendPackage);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-		
+	
 		
    }
    
