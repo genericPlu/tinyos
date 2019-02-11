@@ -27,7 +27,9 @@ module Node{
 
    uses interface SplitControl as AMControl;
    uses interface Receive;
-
+   
+   uses interface Random as Random;
+   
    uses interface SimpleSend as Sender;
 
    uses interface CommandHandler;
@@ -38,7 +40,7 @@ module Node{
    
    uses interface List<pack> as list;
    
-   uses interface List<uint16_t> as neighborList;
+   uses interface List<uint16_t*> as neighborList;
    
  
 }
@@ -59,13 +61,13 @@ implementation{
    event void Boot.booted(){
       call AMControl.start();
 	  
-	  call Timer0.startPeriodic(100000);
+	  call Timer0.startPeriodic(call Random.rand32() % 2000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
    event void Timer0.fired(){
-       //createNeighborsList();
-	   //dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
+       createNeighborsList();
+	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
 
    }
  

@@ -21,6 +21,8 @@ implementation {
     components new ListC(pack,40) as list;
 	components new ListC(uint16_t,20) as neighborList;
 	components new HashmapC(uint16_t,20) as neighborMap;
+	components RandomC as Random;
+    
 
     Node -> MainC.Boot;
 	
@@ -30,7 +32,7 @@ implementation {
     Node.Timer0 -> Timer0;        
     Node.list -> list; 
 	Node.neighborList ->neighborList;
-	
+	Node.Random -> Random;
     Node.neighborMap ->neighborMap;
 
     components ActiveMessageC;
