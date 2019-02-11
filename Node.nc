@@ -187,11 +187,7 @@ implementation{
 		}
 		return FALSE;
    }
-   void printNeighbors(){
-        
-		
-   }
-   
+
    void createNeighborsList(){
 		uint8_t *payload;
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...");
