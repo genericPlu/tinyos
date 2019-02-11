@@ -20,8 +20,8 @@ implementation {
     components new TimerMilliC() as Timer0;
     components new ListC(pack,20) as list;
 	components new ListC(uint16_t,20) as neighborList;
-	components new Hashmap(uint16_t,20) as neighborMap;
-	
+	components new HashmapC(uint16_t,20) as neighborMap;
+
     Node -> MainC.Boot;
 	
     Node.Receive -> GeneralReceive;
