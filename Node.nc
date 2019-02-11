@@ -88,10 +88,12 @@ implementation{
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
 			if(myMsg->dest == AM_BROADCAST_ADDR){
-				dbg(NEIGHBOR_CHANNEL, "recieveing Node %d resending Node %d  \n" , TOS_NODE_ID, myMsg->src);
+				dbg(NEIGHBOR_CHANNEL, "Node %d is Node %d 's neighbor  addings to list.\n" , TOS_NODE_ID, myMsg->src);
+				/*
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, --myMsg->TTL, 0, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call list.pushback(sendPackage);
 				call Sender.send(sendPackage, myMsg->src);
+				*/
 				call neighborList.pushback(TOS_NODE_ID);
 				return msg;
 			}
@@ -141,8 +143,8 @@ implementation{
 		uint16_t i;
 		
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
-		for(i = 1; i< call neighborList.size(); i++){
-			dbg(NEIGHBOR_CHANNEL, "Neighbor: %d", call neighborList.get(i));
+		for(i = 0; i< call neighborList.size(); i++){
+			dbg(NEIGHBOR_CHANNEL, "%d is %d 's neighbor", call neighborList.get(i), TOS_NODE_ID);
 		}
 	}
 
@@ -183,11 +185,11 @@ implementation{
 		uint8_t payload = 999;
 		uint16_t i;
 		//Clear list?
-		
+		/*
 		for(i=0; i< call list.size(); i++){
 			call list.popfront();
 		}
-		
+		*/
 		dbg(NEIGHBOR_CHANNEL, "Creating/updating neighbor list...\n");
 		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 0, 1, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
 		call list.pushback(sendPackage);
