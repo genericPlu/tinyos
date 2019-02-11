@@ -89,9 +89,11 @@ implementation{
 			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
 			if(myMsg->dest == AM_BROADCAST_ADDR){
 				dbg(NEIGHBOR_CHANNEL, "recieveing Node %d resending Node %d  \n" , TOS_NODE_ID, myMsg->src);
+				/*
 				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, --myMsg->TTL, 0, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call list.pushback(sendPackage);
 				call Sender.send(sendPackage, myMsg->src);
+				*/
 				call neighborList.pushback(TOS_NODE_ID);
 				return msg;
 			}
@@ -141,7 +143,7 @@ implementation{
 		uint16_t i;
 		
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
-		for(i = 1; i< call neighborList.size(); i++){
+		for(i = 0; i< call neighborList.size(); i++){
 			dbg(NEIGHBOR_CHANNEL, "Neighbor: %d", call neighborList.get(i));
 		}
 	}
@@ -183,7 +185,8 @@ implementation{
 		
 		uint8_t *payload;
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
-		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
+		call list.pushback(sendPackage);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 	
 		
