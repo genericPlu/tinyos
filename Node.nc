@@ -6,6 +6,13 @@
  * @author UCM ANDES Lab
  * @date   2013/09/03
  *
+ 
+ 
+ Neighbor Discovery
+ 1. broadcast one packet from each node
+ 2. neighbors respond with ping and are added to list
+ 3. list of alist? list of array?
+ 4.
  */
 
 #include <Timer.h>
@@ -31,7 +38,7 @@ module Node{
    
    uses interface List<pack> as list;
    
-   uses interface List<uint16_t> as neighborList;
+   uses interface List<uint16_t[20]> as neighborList;
  
 }
 
