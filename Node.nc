@@ -88,6 +88,7 @@ implementation{
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
 			if(myMsg->seq == 999){
+				dbg(NEIGHBOR_CHANNEL, "Node %d  \n" , TOS_NODE_ID);
 				if( call neighborMap.contains(TOS_NODE_ID) == FALSE){
 					dbg(NEIGHBOR_CHANNEL, "inserting Node %d  \n" , TOS_NODE_ID);
 					call neighborMap.insert(myMsg->src,TOS_NODE_ID);
@@ -188,7 +189,7 @@ implementation{
 		uint8_t *payload;
 		uint16_t i;
 		dbg(NEIGHBOR_CHANNEL, "Creating/updating neighbor list...\n");
-		for(i = 1; i < call list.size(); i++){
+		for(i = 1; i < 20; i++){
 			counter = 0;
 			makePack(&sendPackage, i, AM_BROADCAST_ADDR, 20, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
 			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
