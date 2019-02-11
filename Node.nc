@@ -59,13 +59,13 @@ implementation{
    event void Boot.booted(){
       call AMControl.start();
 	  
-	  call Timer0.startPeriodic(300000);
+	  call Timer0.startPeriodic(100000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
    event void Timer0.fired(){
        createNeighborsList();
-	   dbg(GENERAL_CHANNEL, "60 sec TIMER FIRED\n");
+	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
 
    }
  
