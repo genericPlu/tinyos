@@ -19,6 +19,7 @@ implementation {
     components new AMReceiverC(AM_PACK) as GeneralReceive;
     components new TimerMilliC() as Timer0;
     components new ListC(pack,20) as list;
+	components new ListC(uint16_t,20) as neighborList;
     Node -> MainC.Boot;
 	
     Node.Receive -> GeneralReceive;
@@ -26,6 +27,8 @@ implementation {
 	
     Node.Timer0 -> Timer0;        
     Node.list -> list; 
+	Node.neighborList ->neighborList;
+
     components ActiveMessageC;
     Node.AMControl -> ActiveMessageC;
 
