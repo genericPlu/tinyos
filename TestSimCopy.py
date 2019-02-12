@@ -147,7 +147,7 @@ def main():
         #s.neighborDMP(i);
         #s.runTime(50);
     s.runTime(50);
-    s.neighborDMP(i);
+    s.neighborDMP(1);
     s.runTime(50);
 	
 if __name__ == '__main__':
