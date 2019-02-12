@@ -1,6 +1,6 @@
 /*
  * ANDES Lab - University of California, Merced
- * This class provides the basic functions of a network node.
+   This class provides the basic functions of a network node.
  *
  * @author UCM ANDES Lab
  * @date   2013/09/03
