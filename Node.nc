@@ -91,16 +91,16 @@ implementation{
 				}
 				else if(myMsg->protocol == 1){
 					dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
-					call  neighborList.pushback(myMsg->src);
+					//call  neighborList.pushback(myMsg->src);
 					dbg(FLOODING_CHANNEL, "proto1 %d \n" ,call neighborList.get(TOS_NODE_ID));
 					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, --myMsg->TTL, 2, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 					call list.pushback(sendPackage);
 					call Sender.send(sendPackage, myMsg->src);
-					if(myMsg->src!=19){
-						makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, 2, 1, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-						call list.pushback(sendPackage);
-						call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-					}
+					
+					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, 2, 1, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+					call list.pushback(sendPackage);
+					call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+					
 					return msg;
 				}
 
