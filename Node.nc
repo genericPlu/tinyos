@@ -48,7 +48,7 @@ module Node{
 implementation{
    uint8_t counter = 0;
    uint8_t sequence = 0;
-   uint16_t* neighbors;
+   uint16_t neighbors[2];
    
    pack sendPackage;
 
@@ -66,9 +66,9 @@ implementation{
    }
    
    event void Timer0.fired(){
-       //createNeighborsList();
+       createNeighborsList();
 	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
-	   //call Timer0.stop();
+	   call Timer0.stop();
 
    }
  
@@ -90,13 +90,28 @@ implementation{
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
-			if(myMsg->dest == AM_BROADCAST_ADDR){
-				dbg(NEIGHBOR_CHANNEL, "inserting Node %d into neighbor list  \n" , TOS_NODE_ID);
-				/*
-				makePack(&sendPackage, TOS_NODE_ID, myMsg->src, --myMsg->TTL, 0, myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+			if(TOS_NODE_ID == myMsg->dest && 997 == myMsg->seq){
+				neighbors[0] = myMsg->src;
+				neighbors[1] = myMsg->src;
+				call neighborList.pushfront(neighbors);
+				
+			}
+			else if(myMsg->dest == AM_BROADCAST_ADDR){
+				if(myMsg-> seq == 999){
+					makePack(&sendPackage, TOS_NODE_ID,myMsg->src, 2, TOS_NODE_ID, 998, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+					call list.pushback(sendPackage);
+					call Sender.send(sendPackage, myMsg->src);
+				}
+				else if(myMsg-> seq == 998){
+					makePack(&sendPackage, TOS_NODE_ID,myMsg->src, --myMsg->TTL, myMsg->protocol, 997, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+					call list.pushback(sendPackage);
+					call Sender.send(sendPackage, myMsg->src);
+				}
+				makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, 2, 0, 999, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call list.pushback(sendPackage);
-				call Sender.send(sendPackage, myMsg->src);
-				*/
+				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+				
+				//neighbors[counter++] = TOS_NODE_ID;
 				//call neighborList.pushfront(TOS_NODE_ID);
 				return msg;
 			}
@@ -186,6 +201,7 @@ implementation{
    void createNeighborsList(){
 		uint8_t *payload;
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
+		counter = 0;
 		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
 		call list.pushback(sendPackage);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
