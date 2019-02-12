@@ -153,7 +153,7 @@ implementation{
 		for(i = 0; i < t; i++){
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(i));
 		}
-	
+		/*
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		i = TOS_NODE_ID;
 		if(TOS_NODE_ID == 1)
