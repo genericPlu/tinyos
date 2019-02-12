@@ -53,7 +53,6 @@ implementation{
    
    event void Boot.booted(){
       call AMControl.start();
-	  createNeighborsList();
 	  //call Timer0.startPeriodic(100000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
@@ -66,6 +65,7 @@ implementation{
    }
  
    event void AMControl.startDone(error_t err){
+      createNeighborsList();
       if(err == SUCCESS){
          dbg(GENERAL_CHANNEL, "Radio On\n");
 		
