@@ -97,6 +97,7 @@ implementation{
 					call Sender.send(sendPackage, myMsg->src);
 					return msg;
 				}
+				/*
 				else if(myMsg->protocol == 2){ 
 					call  neighborList.pushback(myMsg->src);
 					//call  neighborList.pushback(5);
@@ -108,7 +109,7 @@ implementation{
 					}
 					return msg;
 				}
-				
+*/				
 				return msg;
 			}
 			else if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
