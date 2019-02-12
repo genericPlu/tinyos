@@ -59,7 +59,7 @@ implementation{
    //Added Timer0 firing event to create neighbor list
    event void Timer0.fired(){
        createNeighborsList();
-	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
+	   //dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
 
 
    }
