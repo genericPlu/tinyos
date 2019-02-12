@@ -91,13 +91,13 @@ implementation{
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
 			 if(myMsg->dest == AM_BROADCAST_ADDR){
-				if(src->protocol == 1){
+				if(myMsg->src->protocol == 1){
 					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, myMsg->TTL-1, 2, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 					call list.pushback(sendPackage);
 					call Sender.send(sendPackage, myMsg->src);
 					return msg;
 				}
-				else if(src->protocol == 2){
+				else if(myMsg->src->protocol == 2){
 					neighborList.pushback(TOS_NODE_ID);
 				}
 				
