@@ -1,11 +1,10 @@
-
 /*
  * ANDES Lab - University of California, Merced
  * This class provides the basic functions of a network node.
  *
  * @author UCM ANDES Lab
  * @date   2013/09/03
- *
+ *Adam Pluguez CSE160 Project1 Updated 2/12/19
  */
 
 #include <Timer.h>
@@ -38,25 +37,25 @@ module Node{
 }
 
 implementation{
-   uint8_t counter = 0;
    uint8_t sequence = 0;
-   
- 
-	
+
    pack sendPackage;
 
    // Prototypes
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
+  
+  //Added prototypes
    bool checkSentList(pack *Package);
    void createNeighborsList();
    
-   
+   //Added Timer0
    event void Boot.booted(){
       call AMControl.start();
 	  call Timer0.startPeriodic(300000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
+   //Added Timer0 firing event to create neighbor list
    event void Timer0.fired(){
        createNeighborsList();
 	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
@@ -76,23 +75,18 @@ implementation{
    }
  
    event void AMControl.stopDone(error_t err){}
-
+	
+   //Modifed for flooding and neighbor discovery
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
       
       if(len==sizeof(pack)){
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
-			//dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 			if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
-
-				//call list.pushback(*myMsg);
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence %d\n", myMsg->payload, myMsg->seq);
-				//sequence = 0;
-				//makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20, 0, ++sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-				//call list.pushback(sendPackage);
-				//call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-				//dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->src);
+				if(myMsg->seq ==1)
+					dbg(FLOODING_CHANNEL, "Flooding Successful!\n");
 				return msg;
 			}
 			else if (myMsg->dest != myMsg->src && myMsg->dest != AM_BROADCAST_ADDR&& myMsg->protocol == 0){
@@ -114,7 +108,6 @@ implementation{
 					//dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 					if(call  neighborList.get(TOS_NODE_ID) !=myMsg->src && call neighborList.get(TOS_NODE_ID-1) !=myMsg->src)
 						call  neighborList.pushback(myMsg->src);
-					//dbg(FLOODING_CHANNEL, "proto1 %d \n" ,call neighborList.get(TOS_NODE_ID));
 					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, --myMsg->TTL, 2, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 					call list.pushback(sendPackage);
 					call Sender.send(sendPackage, myMsg->src);
@@ -129,8 +122,6 @@ implementation{
 				else if(myMsg->protocol == 2){ 
 					if(call  neighborList.get(TOS_NODE_ID) !=myMsg->src && call neighborList.get(TOS_NODE_ID-1) !=myMsg->src)
 						call  neighborList.pushback(myMsg->src);
-					//call  neighborList.pushback(5);
-					//dbg(FLOODING_CHANNEL, "proto2 %d \n" ,call neighborList.size());
 					if(myMsg->src!=19){
 						makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, --myMsg->TTL, 1, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 						call list.pushback(sendPackage);
@@ -142,15 +133,8 @@ implementation{
 				return msg;
 			}
 			else if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
-
-				//call list.pushback(*myMsg);
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence %d\n", myMsg->payload, myMsg->seq);
-				//sequence = 0;
-				//makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20, 0, ++sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-				//call list.pushback(sendPackage);
-				//call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-				//dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->src);
 				return msg;
 			}
 			else if (myMsg->dest != myMsg->src && myMsg->dest != AM_BROADCAST_ADDR&& myMsg->protocol == 0){
@@ -160,7 +144,6 @@ implementation{
 				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 				dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 				return msg;
-			
 			}
 		}	
 		else{

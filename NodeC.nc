@@ -4,13 +4,13 @@
  *
  * @author UCM ANDES Lab
  * @date   2013/09/03
- *-
+ * Adam Pluguez CSE160 Project1 Updated 2/12/19
  */
 
 #include <Timer.h>
 #include "includes/CommandMsg.h"
 #include "includes/packet.h"
-
+/*Added Timer, Random, Two Lists, and Hashmap (not all used)*/
 configuration NodeC{
 }
 implementation {
@@ -28,7 +28,7 @@ implementation {
 	
     Node.Receive -> GeneralReceive;
 	
-	
+	/*Added Timer, Random, Two Lists, and Hashmap (not all used)*/
     Node.Timer0 -> Timer0;        
     Node.list -> list; 
 	Node.neighborList ->neighborList;
