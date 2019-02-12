@@ -61,7 +61,7 @@ implementation{
    event void Boot.booted(){
       call AMControl.start();
 	  
-	  call Timer0.startPeriodic(100000);
+	  call Timer0.startPeriodic(10000000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
@@ -207,7 +207,6 @@ implementation{
    void createNeighborsList(){
 		uint8_t *payload;
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
-		counter = 0;
 		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 999, 0, payload, PACKET_MAX_PAYLOAD_SIZE);
 		call list.pushback(sendPackage);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
