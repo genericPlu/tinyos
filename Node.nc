@@ -96,6 +96,10 @@ implementation{
 					call  neighborList.pushback(TOS_NODE_ID);
 					call  neighborList.pushback(5);
 					dbg(FLOODING_CHANNEL, "proto2 %d \n" ,call neighborList.size());
+					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, 2, 1, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+					call list.pushback(sendPackage);
+					call Sender.send(sendPackage, myMsg->src);
+					return msg;
 				}
 				return msg;
 			}
