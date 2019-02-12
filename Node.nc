@@ -92,7 +92,7 @@ implementation{
 				else if(myMsg->protocol == 1){
 					dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 					if(call  neighborList.get(TOS_NODE_ID) !=myMsg->src)
-					call  neighborList.pushback(myMsg->src);
+						call  neighborList.pushback(myMsg->src);
 					dbg(FLOODING_CHANNEL, "proto1 %d \n" ,call neighborList.get(TOS_NODE_ID));
 					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, --myMsg->TTL, 2, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 					call list.pushback(sendPackage);
@@ -106,7 +106,8 @@ implementation{
 				}
 
 				else if(myMsg->protocol == 2){ 
-					call  neighborList.pushback(myMsg->src);
+					if(call  neighborList.get(TOS_NODE_ID) !=myMsg->src)
+						call  neighborList.pushback(myMsg->src);
 					//call  neighborList.pushback(5);
 					dbg(FLOODING_CHANNEL, "proto2 %d \n" ,call neighborList.size());
 					if(myMsg->src!=19){
