@@ -98,11 +98,13 @@ implementation{
 			}
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
 				if(myMsg-> seq == 999){
+					dbg(FLOODING_CHANNEL, "size %d \n" ,999);
 					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, 2, TOS_NODE_ID, 998, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 					call list.pushback(sendPackage);
 					call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 				}
 				else if(myMsg-> seq == 998){
+					dbg(FLOODING_CHANNEL, "size %d \n" ,998);
 					makePack(&sendPackage, TOS_NODE_ID,myMsg->src, --myMsg->TTL, myMsg->protocol, 997, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 					call list.pushback(sendPackage);
 					call Sender.send(sendPackage, myMsg->src);
