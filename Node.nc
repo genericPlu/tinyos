@@ -149,6 +149,10 @@ implementation{
 		uint16_t i;
 		uint16_t* t;
 		createNeighborsList();
+		for(i = 0; i < neighborList.size(); i++){
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(i))
+		}
+		/*
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		i = TOS_NODE_ID;
 		if(TOS_NODE_ID == 1)
@@ -157,6 +161,7 @@ implementation{
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.back());
 		else
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d, %d\n",call neighborList.get(i-1),call neighborList.get(i+1));	
+		*/
 	}
 
    event void CommandHandler.printRouteTable(){}
