@@ -167,7 +167,7 @@ implementation{
 		if(TOS_NODE_ID == 1)
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(1));
 		else if(TOS_NODE_ID == 19)
-			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(19));
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(18));
 		else
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d, %d\n",call neighborList.get(i-1),call neighborList.get(i+1));	
 		
