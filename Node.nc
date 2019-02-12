@@ -98,7 +98,7 @@ implementation{
 					return msg;
 				}
 				else if(myMsg->src->protocol == 2){
-					neighborList.pushback(TOS_NODE_ID);
+					call neighborList.pushback(TOS_NODE_ID);
 				}
 				
 				return msg;
