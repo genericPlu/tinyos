@@ -90,7 +90,7 @@ implementation{
 					return msg;
 				}
 				else if(myMsg->protocol == 1){
-					dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
+					//dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 					if(call  neighborList.get(TOS_NODE_ID) !=myMsg->src && call neighborList.get(TOS_NODE_ID-1) !=myMsg->src)
 						call  neighborList.pushback(myMsg->src);
 					//dbg(FLOODING_CHANNEL, "proto1 %d \n" ,call neighborList.get(TOS_NODE_ID));
