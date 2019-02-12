@@ -1,3 +1,4 @@
+
 /*
  * ANDES Lab - University of California, Merced
  * This class provides the basic functions of a network node.
@@ -6,116 +7,174 @@
  * @date   2013/09/03
  *
  */
+
 #include <Timer.h>
 #include "includes/command.h"
 #include "includes/packet.h"
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-#define PACKETLIST_SIZE = 20;
+
 module Node{
    uses interface Boot;
 
    uses interface SplitControl as AMControl;
    uses interface Receive;
-
+   
+   uses interface Random as Random;
+   
    uses interface SimpleSend as Sender;
 
    uses interface CommandHandler;
    
    uses interface Timer<TMilli> as Timer0;
    
-   uses interface List<uint8_t> as list;
+   uses interface Hashmap<uint16_t> as neighborMap;
+   
+   uses interface List<pack> as list;
+   
+   uses interface List<uint16_t*> as neighborList;
    
 }
 
 implementation{
+   uint8_t counter = 0;
    uint8_t sequence = 0;
-   uint16_t counter = 0;
-   typedef struct packetlist{
-		uint16_t src;
-		uint16_t seq;
-	}
-	
-   struct forwarded packetlist[PACKETLIST_SIZE];
+   
+ 
 	
    pack sendPackage;
 
    // Prototypes
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
-   void addToList(uint16_t src, uint16_t seq);
-   bool inPacketlist(uint16_t src, uint16_t seq);
+   bool checkSentList(pack *Package);
+   void createNeighborsList();
+   
    
    event void Boot.booted(){
       call AMControl.start();
-	  
-
+	  //call Timer0.startPeriodic(100000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
    event void Timer0.fired(){
-	call AMControl.stop();
-	call AMControl.start();
+       createNeighborsList();
+	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
+	   call Timer0.stop();
 
    }
  
    event void AMControl.startDone(error_t err){
+      createNeighborsList();
       if(err == SUCCESS){
          dbg(GENERAL_CHANNEL, "Radio On\n");
+		
       }else{
          //Retry until successful
          call AMControl.start();
       }
    }
-
-   event void AMControl.stopDone(error_t err){
-		if(err == SUCCESS){
-         dbg(GENERAL_CHANNEL, "Radio Off\n");
-      }else{
-         //Retry until successful
-         call AMControl.stop();
-      }
-	}
-   
-   
+ 
+   event void AMControl.stopDone(error_t err){}
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-      /*call Timer0.startOneShot(25);*/
-	  dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
+      
       if(len==sizeof(pack)){
-         pack* myMsg=(pack*) payload;
-		 if (TOS_NODE_ID !== myMsg->dest && !inPacketlist(myMsg->src,myMsg->seq){
-			forwarded.addToList(myMsg->src, myMsg->seq);
-			dbg(GENERAL_CHANNEL, "Package Payload: %s Sequence# %d\n", myMsg->payload, myMsg->seq);
-			makePack(&sendPackage, TOS_NODE_ID, myMsg->dest, 0, 0, sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-			dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
+        pack* myMsg=(pack*) payload;
+        if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
+			//dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
+			 if(myMsg->dest == AM_BROADCAST_ADDR){
+			 /*
+				//dbg(FLOODING_CHANNEL, " neighbor probe proto %d \n" ,myMsg->protocol);
+				if(call neighborList.size() == 19){
+					return msg;
+				}
+				else if(myMsg->protocol == 1){
+					dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
+					dbg(FLOODING_CHANNEL, "proto1 %d \n" ,call neighborList.size());
+					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, 2, 2, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+					call list.pushback(sendPackage);
+					call Sender.send(sendPackage, myMsg->src);
+					return msg;
+				}
+				else if(myMsg->protocol == 2){ 
+					call  neighborList.pushback(myMsg->src);
+					//call  neighborList.pushback(5);
+					dbg(FLOODING_CHANNEL, "proto2 %d \n" ,call neighborList.size());
+					if(myMsg->src!=19){
+						makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, 2, 1, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+						call list.pushback(sendPackage);
+						call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+					}
+					return msg;
+				}
+				*/
+				return msg;
+			}
+			else if(TOS_NODE_ID == myMsg->dest){
+
+				//call list.pushback(*myMsg);
+				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
+				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence %d\n", myMsg->payload, myMsg->seq);
+				//sequence = 0;
+				//makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20, 0, ++sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				//call list.pushback(sendPackage);
+				//call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+				//dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->src);
+				return msg;
+			}
+			else if (myMsg->dest != myMsg->src && myMsg->dest != AM_BROADCAST_ADDR){
+				makePack(&sendPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				call list.pushback(sendPackage);
+				dbg(FLOODING_CHANNEL, "Packet Received at Node %d for Node %d. Resending..\n", TOS_NODE_ID, myMsg->dest);
+				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+				dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
+				return msg;
+			
+			}
+		}	
+		else{
 			return msg;
 		}
-		
-         
-		
-         return msg;
-      }
-	  
+		return msg;
+	  }
       dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
-      
-	  return msg;
-   }
-
+      return msg;
+    }
+	
+		
 
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
-	  dbg(GENERAL_CHANNEL, "PING EVENT \n");
-      makePack(&sendPackage, TOS_NODE_ID, destination, 0, 0, sequence++, payload, PACKET_MAX_PAYLOAD_SIZE);
+      dbg(GENERAL_CHANNEL, "PING EVENT \n");
+      makePack(&sendPackage, TOS_NODE_ID, destination, 20, 0, ++sequence, payload, PACKET_MAX_PAYLOAD_SIZE);
+	  call list.pushback(sendPackage);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-	  dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
+	  dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
+	  
    }
 
     event void CommandHandler.printNeighbors(){
-		dbg(NEIGHBOR_CHANNEL, "Checking neighbors of %d \n", TOS_NODE_ID);
+		uint16_t i;
+		uint16_t t;
+		//createNeighborsList();
+		
+		t = call neighborList.size();
+		dbg(NEIGHBOR_CHANNEL,"%d\n",t);
+		for(i = 0; i < t; i++){
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(i));
+		}
+		/*
+		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
+		i = TOS_NODE_ID;
+		if(TOS_NODE_ID == 1)
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(1));
+		else if(TOS_NODE_ID == 19)
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.back());
+		else
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d, %d\n",call neighborList.get(i-1),call neighborList.get(i+1));	
+		*/
+	}
 
-   }   
-   
    event void CommandHandler.printRouteTable(){}
 
    event void CommandHandler.printLinkState(){}
@@ -139,38 +198,26 @@ implementation{
       memcpy(Package->payload, payload, length);
    }
    
-   bool inPacketlist(uint16_t src, uint16_t seq){
-		uint16_t i = 0; 
-		for (i = 0; i < PACKETLIST_SIZE; i++) {
-			if (src == packetlist[i].src && seq == packetlist[i].seq) {
-				dbg(FLOODING_CHANNEL, "Found in list: src%u seq%u\n", src, seq);
-				return TRUE;
-			}
+   bool checkSentList(pack *Package){
+		uint16_t i;
+		for(i = 0; i < call list.size(); i++){
+			pack current = call list.get(i);
+			if(current.src == Package->src)
+				if(current.seq == Package->seq )
+					return TRUE;
 		}
 		return FALSE;
-	}
- 
-	void addToList(uint16_t src, uint16_t seq) {
-		if (counter < PACKETLIST_SIZE) { 
-			// add to end of currently extant list
-			packetlist[counter].src = src;
-			packetlist[counter].seq = seq;
-			counter++;
-		} else {
-			uint32_t i;
-			// shift all history over, erasing oldest
-			for (i = 0; i<(PACKETLIST_SIZE-1); i++) {
-				packetlist[i].src = packetlist[i+1].src;
-				packetlist[i].seq = packetlist[i+1].seq;
-			}
-			// add to end of list
-			packetlist[PACKETLIST_SIZE].src = src;
-			packetlist[PACKETLIST_SIZE].seq = seq;
-		}
-		dbg(FLOODING_CHANNEL, "Added to packetlist: src%u seq%u\n", src, seq);
-		return;
-	}
-   
-   
+   }
+
+   void createNeighborsList(){
+		char * payload = "";
+		call neighborList.pushback(TOS_NODE_ID);
+		//call neighborList.pushback(5);
+		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 1, 1, (uint8_t*) payload, PACKET_MAX_PAYLOAD_SIZE);
+		call list.pushback(sendPackage);
+		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+		
+   }
    
 }
