@@ -14,11 +14,7 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
-typedef struct Node{
-		uint16_t tls;
-		uint16_t node;
 
-};
 module Node{
    uses interface Boot;
 
@@ -37,7 +33,7 @@ module Node{
    
    uses interface List<pack> as list;
    
-   uses interface List<Node*> as neighborList;
+   uses interface List<uint16*> as neighborList;
    
 }
 
@@ -98,6 +94,7 @@ implementation{
 				}
 				else if(myMsg->protocol == 2){
 					call  neighborList.pushback(TOS_NODE_ID);
+					call  neighborList.pushback(5);
 					dbg(FLOODING_CHANNEL, "proto2 %d \n" ,call neighborList.size());
 				}
 				return msg;

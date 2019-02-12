@@ -19,7 +19,7 @@ implementation {
     components new AMReceiverC(AM_PACK) as GeneralReceive;
     components new TimerMilliC() as Timer0;
     components new ListC(pack,40) as list;
-	components new ListC(Node*,40) as neighborList;
+	components new ListC(uint16*,40) as neighborList;
 	components new HashmapC(uint16_t,40) as neighborMap;
 	components RandomC as Random;
     
