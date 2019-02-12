@@ -156,7 +156,7 @@ implementation{
 		
 		t = call neighborList.size();
 		dbg(NEIGHBOR_CHANNEL,"%d\n",t);
-		for(i = 0; i < t; i++){
+		for(i = 0; i <= t; i++){
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(i));
 		}
 		/*
