@@ -61,7 +61,7 @@ implementation{
    event void Boot.booted(){
       call AMControl.start();
 	  
-	  call Timer0.startPeriodic(10000000);
+	  //call Timer0.startPeriodic(10000000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
@@ -166,7 +166,7 @@ implementation{
     event void CommandHandler.printNeighbors(){
 		uint16_t i;
 		uint16_t t;
-		
+		createNeighborsList();
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		
 	}
