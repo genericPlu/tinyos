@@ -179,7 +179,7 @@ implementation{
 		}
 		else{
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d, %d\n",call neighborList.get(TOS_NODE_ID),call neighborList.get(TOS_NODE_ID-1));	
-			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d, %d\n",call neighborMap.get(TOS_NODE_ID)), call neighborMap.get(TOS_NODE_ID-1);
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d, %d\n",call neighborMap.get(TOS_NODE_ID)), call neighborMap.get(TOS_NODE_ID+1);
 		}
 	}
 
