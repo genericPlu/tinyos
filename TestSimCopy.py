@@ -146,7 +146,7 @@ def main():
         #s.runTime(50);
         #s.neighborDMP(i);
         #s.runTime(50);
-    s.runTime(50);
+    s.runTime(400);
     s.neighborDMP(1);
     s.runTime(50);
 	
