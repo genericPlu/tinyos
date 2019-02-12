@@ -88,7 +88,7 @@ implementation{
 				//dbg(FLOODING_CHANNEL, " neighbor probe proto %d \n" ,myMsg->protocol);
 				if(call neighborList.size() == 19){
 					return msg;
-				}
+				}/*
 				else if(myMsg->protocol == 1){
 					//dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 					if(call  neighborList.get(TOS_NODE_ID) !=myMsg->src && call neighborList.get(TOS_NODE_ID-1) !=myMsg->src)
@@ -117,7 +117,7 @@ implementation{
 					}
 					return msg;
 				}
-			
+			*/
 				return msg;
 			}
 			else if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
