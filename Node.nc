@@ -147,9 +147,11 @@ implementation{
 
     event void CommandHandler.printNeighbors(){
 		uint16_t i;
-		uint16_t* t;
+		uint16_t t;
 		createNeighborsList();
-		for(i = 0; i < call neighborList.size(); i++){
+		t = call neighborList.size();
+		dbg(NEIGHBOR_CHANNEL,"%d\n",t);
+		for(i = 0; i < t; i++){
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(i));
 		}
 		/*
