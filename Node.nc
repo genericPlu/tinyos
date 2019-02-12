@@ -92,7 +92,7 @@ implementation{
 			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
 			 if(myMsg->dest == AM_BROADCAST_ADDR){
 				if(myMsg->protocol == 1){
-					dbg(FLOODING_CHANNEL, "proto1 %d \n" ,call neighborList.size();
+					dbg(FLOODING_CHANNEL, "proto1 %d \n" ,call neighborList.size());
 					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, myMsg->TTL-1, 2, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 					call list.pushback(sendPackage);
 					call Sender.send(sendPackage, myMsg->src);
