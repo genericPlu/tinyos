@@ -214,8 +214,8 @@ implementation{
    void createNeighborsList(){
 		uint16_t i;
 		char * payload = "";
-		for( i = 0; i < call neighborList.size(); i ++)
-			call neighborList.popfront();
+		//for( i = 0; i < call neighborList.size(); i ++)
+			//call neighborList.popfront();
 		call neighborList.pushback(TOS_NODE_ID);
 		//call neighborList.pushback(5);
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
