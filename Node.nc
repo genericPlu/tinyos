@@ -152,7 +152,7 @@ implementation{
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		i = TOS_NODE_ID;
 		if(TOS_NODE_ID == 1)
-			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.front());
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(1));
 		else if(TOS_NODE_ID == 19)
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.back());
 		else
