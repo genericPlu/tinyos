@@ -18,7 +18,7 @@ typedef struct Node{
 		uint16_t tls;
 		uint16_t node;
 
-};Node
+};
 module Node{
    uses interface Boot;
 
