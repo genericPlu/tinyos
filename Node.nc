@@ -101,7 +101,7 @@ implementation{
 				else if(myMsg->protocol == 2){
 					
 					call  neighborList.pushback(TOS_NODE_ID);
-					dbg(FLOODING_CHANNEL, "proto2 %d \n" ,call neighborList.size();
+					dbg(FLOODING_CHANNEL, "proto2 %d \n" ,call neighborList.size());
 				}
 				
 				return msg;
