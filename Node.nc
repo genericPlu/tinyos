@@ -150,7 +150,7 @@ implementation{
 		uint16_t* t;
 		createNeighborsList();
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
-		uint16_t i = TOS_NODE_ID;
+		i = TOS_NODE_ID;
 		if(TOS_NODE_ID == 1)
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.front());
 		else if(TOS_NODE_ID == 19)
