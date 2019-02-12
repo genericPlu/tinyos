@@ -53,7 +53,7 @@ implementation{
    
    event void Boot.booted(){
       call AMControl.start();
-	  call Timer0.startPeriodic(1000);
+	  call Timer0.startPeriodic(100);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
@@ -92,7 +92,7 @@ implementation{
 				else if(myMsg->protocol == 1){
 					dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 					call  neighborList.pushback(myMsg->src);
-					dbg(FLOODING_CHANNEL, "proto1 %d \n" ,call neighborList.size());
+					dbg(FLOODING_CHANNEL, "proto1 %d \n" ,call neighborList.get(TOS_NODE_ID));
 					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, 1, 2, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 					call list.pushback(sendPackage);
 					call Sender.send(sendPackage, AM_BROADCAST_ADDR);
