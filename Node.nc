@@ -205,10 +205,9 @@ implementation{
    }
 
    void createNeighborsList(){
-		uint8_t *payload;
-		char * message = "womp\n";
+		char * payload = "womp\n";
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
-		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 999, 0, (uint8_t*) message, PACKET_MAX_PAYLOAD_SIZE);
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 999, 0, (uint8_t*) payload, PACKET_MAX_PAYLOAD_SIZE);
 		call list.pushback(sendPackage);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 	
