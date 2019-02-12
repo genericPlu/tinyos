@@ -33,15 +33,19 @@ module Node{
    
    uses interface List<pack> as list;
    
-   uses interface List<uint16_t> as neighborList;
+   uses interface List<Node*> as neighborList;
    
 }
 
 implementation{
    uint8_t counter = 0;
    uint8_t sequence = 0;
-   uint16_t neighbors[2];
    
+   typedef struct Node{
+		uint16_t tls;
+		uint16_t node;
+	}
+	
    pack sendPackage;
 
    // Prototypes
@@ -81,7 +85,7 @@ implementation{
       if(len==sizeof(pack)){
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
-			//dbg(FLOODING_CHANNEL, "size %d \n" , call neighborMap.size());
+			dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 			 if(myMsg->dest == AM_BROADCAST_ADDR){
 				dbg(FLOODING_CHANNEL, " neighbor probe proto %d \n" ,myMsg->protocol);
 				if(myMsg->protocol == 1){
@@ -149,7 +153,7 @@ implementation{
 		for(i = 0; i < t; i++){
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(i));
 		}
-		/*
+	
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		i = TOS_NODE_ID;
 		if(TOS_NODE_ID == 1)
@@ -193,7 +197,7 @@ implementation{
 					return TRUE;
 		}
 		return FALSE;
-   }``
+   }
 
    void createNeighborsList(){
 		char * payload = "";
