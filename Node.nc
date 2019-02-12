@@ -85,7 +85,10 @@ implementation{
 			//dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 			 if(myMsg->dest == AM_BROADCAST_ADDR){
 				dbg(FLOODING_CHANNEL, " neighbor probe proto %d \n" ,myMsg->protocol);
-				if(myMsg->protocol == 1){
+				if(call neighborList.size() == 38){
+					return msg;
+				{
+				else if(myMsg->protocol == 1){
 					dbg(FLOODING_CHANNEL, "proto1 %d \n" ,call neighborList.size());
 					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, myMsg->TTL-1, 2, ++myMsg->seq, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 					call list.pushback(sendPackage);
