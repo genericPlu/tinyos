@@ -6,13 +6,6 @@
  * @author UCM ANDES Lab
  * @date   2013/09/03
  *
- 
- 
- Neighbor Discovery
- 1. broadcast one packet from each node
- 2. neighbors respond with ping and are added to list
- 3. list of alist? list of array?
- 4.
  */
 
 #include <Timer.h>
@@ -42,7 +35,6 @@ module Node{
    
    uses interface List<uint16_t> as neighborList;
    
- 
 }
 
 implementation{
@@ -100,11 +92,9 @@ implementation{
 					return msg;
 				}
 				else if(myMsg->protocol == 2){
-					
 					call  neighborList.pushback(TOS_NODE_ID);
 					dbg(FLOODING_CHANNEL, "proto2 %d \n" ,call neighborList.size());
 				}
-				
 				return msg;
 			}
 			else if(TOS_NODE_ID == myMsg->dest){
@@ -145,7 +135,7 @@ implementation{
       makePack(&sendPackage, TOS_NODE_ID, destination, 20, 0, ++sequence, payload, PACKET_MAX_PAYLOAD_SIZE);
 	  call list.pushback(sendPackage);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-	  dbg(FLOODING_CHANNEL, "Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
+	  dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
 	  
    }
 
@@ -156,7 +146,7 @@ implementation{
 		
 		t = call neighborList.size();
 		dbg(NEIGHBOR_CHANNEL,"%d\n",t);
-		for(i = 0; i <= t; i++){
+		for(i = 0; i < t; i++){
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(i));
 		}
 		/*
@@ -193,6 +183,7 @@ implementation{
       Package->protocol = protocol;
       memcpy(Package->payload, payload, length);
    }
+   
    bool checkSentList(pack *Package){
 		uint16_t i;
 		for(i = 0; i < call list.size(); i++){
@@ -202,7 +193,7 @@ implementation{
 					return TRUE;
 		}
 		return FALSE;
-   }
+   }``
 
    void createNeighborsList(){
 		char * payload = "";
@@ -211,7 +202,6 @@ implementation{
 		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 1, 1, (uint8_t*) payload, PACKET_MAX_PAYLOAD_SIZE);
 		call list.pushback(sendPackage);
 		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-	
 		
    }
    
