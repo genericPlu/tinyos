@@ -95,7 +95,7 @@ implementation{
 					call Sender.send(sendPackage, AM_BROADCAST_ADDR);
 					return msg;
 				}
-				else if(myMsg->protocol == 2){
+				else if(myMsg->protocol == 2){ 
 					call  neighborList.pushback(myMsg->src);
 					//call  neighborList.pushback(5);
 					dbg(FLOODING_CHANNEL, "proto2 %d \n" ,call neighborList.size());
@@ -209,7 +209,7 @@ implementation{
    void createNeighborsList(){
 		char * payload = "";
 		call neighborList.pushback(TOS_NODE_ID);
-		call neighborList.pushback(5);
+		//call neighborList.pushback(5);
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
 		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 1, 1, (uint8_t*) payload, PACKET_MAX_PAYLOAD_SIZE);
 		call list.pushback(sendPackage);
