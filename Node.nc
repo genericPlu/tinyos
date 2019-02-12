@@ -14,7 +14,11 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
+typedef struct Node{
+		uint16_t tls;
+		uint16_t node;
 
+};Node
 module Node{
    uses interface Boot;
 
@@ -41,10 +45,7 @@ implementation{
    uint8_t counter = 0;
    uint8_t sequence = 0;
    
-   typedef struct Node{
-		uint16_t tls;
-		uint16_t node;
-	}
+ 
 	
    pack sendPackage;
 
