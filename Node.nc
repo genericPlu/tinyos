@@ -179,7 +179,8 @@ implementation{
 
    event void CommandHandler.setAppClient(){}
 
-   void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t* payload, uint8_t length){
+   void makePack(pack *Package, uint16_t 
+ 0   src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t* payload, uint8_t length){
       Package->src = src;
       Package->dest = dest;
       Package->TTL = TTL;
@@ -201,7 +202,7 @@ implementation{
 
    void createNeighborsList(){
 		char * payload = "";
-		call neighborList.pushback(TOS_NODE_ID);
+		call neighborList.pushback( );
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
 		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 1, 1, (uint8_t*) payload, PACKET_MAX_PAYLOAD_SIZE);
 		call list.pushback(sendPackage);
