@@ -207,13 +207,16 @@ implementation{
    }
 
    void createNeighborsList(){
+		uint16_t i;
 		char * payload = "";
 		call neighborList.pushback(TOS_NODE_ID);
 		//call neighborList.pushback(5);
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
-		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 1, 50, (uint8_t*) payload, PACKET_MAX_PAYLOAD_SIZE);
-		call list.pushback(sendPackage);
-		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+		for(i = 1; i < 20; i++){
+		    makePack(&sendPackage, i, AM_BROADCAST_ADDR, 2, 1, 50, (uint8_t*) payload, PACKET_MAX_PAYLOAD_SIZE);
+		    call list.pushback(sendPackage);
+		    call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+		}
 		
    }
    
