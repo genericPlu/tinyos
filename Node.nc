@@ -53,7 +53,7 @@ implementation{
    
    event void Boot.booted(){
       call AMControl.start();
-	  call Timer0.startPeriodic(10000);
+	  call Timer0.startPeriodic(100000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
@@ -83,12 +83,33 @@ implementation{
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
-			 if(myMsg->dest == AM_BROADCAST_ADDR){
+			if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
+
+				//call list.pushback(*myMsg);
+				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
+				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence %d\n", myMsg->payload, myMsg->seq);
+				//sequence = 0;
+				//makePack(&sendPackage, TOS_NODE_ID, myMsg->src, 20, 0, ++sequence, myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				//call list.pushback(sendPackage);
+				//call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+				//dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->src);
+				return msg;
+			}
+			else if (myMsg->dest != myMsg->src && myMsg->dest != AM_BROADCAST_ADDR&& myMsg->protocol == 0){
+				makePack(&sendPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				call list.pushback(sendPackage);
+				dbg(FLOODING_CHANNEL, "Flooding Packet Received at Node %d for Node %d. Resending..\n", TOS_NODE_ID, myMsg->dest);
+				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+				dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
+				return msg;
+			
+			}
+			else if(myMsg->dest == AM_BROADCAST_ADDR){
 			 
 				//dbg(FLOODING_CHANNEL, " neighbor probe proto %d \n" ,myMsg->protocol);
 				if(call neighborList.size() == 19){
 					return msg;
-				}/*
+				}
 				else if(myMsg->protocol == 1){
 					//dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 					if(call  neighborList.get(TOS_NODE_ID) !=myMsg->src && call neighborList.get(TOS_NODE_ID-1) !=myMsg->src)
@@ -117,7 +138,7 @@ implementation{
 					}
 					return msg;
 				}
-			*/
+			
 				return msg;
 			}
 			else if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
