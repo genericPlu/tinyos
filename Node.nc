@@ -82,7 +82,7 @@ implementation{
       if(len==sizeof(pack)){
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
-			dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
+			//dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 			 if(myMsg->dest == AM_BROADCAST_ADDR){
 				dbg(FLOODING_CHANNEL, " neighbor probe proto %d \n" ,myMsg->protocol);
 				if(myMsg->protocol == 1){
