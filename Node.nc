@@ -84,7 +84,7 @@ implementation{
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			//dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 			 if(myMsg->dest == AM_BROADCAST_ADDR){
-			 /*
+			 
 				//dbg(FLOODING_CHANNEL, " neighbor probe proto %d \n" ,myMsg->protocol);
 				if(call neighborList.size() == 19){
 					return msg;
@@ -108,7 +108,7 @@ implementation{
 					}
 					return msg;
 				}
-				*/
+				
 				return msg;
 			}
 			else if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
