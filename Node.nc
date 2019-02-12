@@ -59,12 +59,11 @@ implementation{
    event void Timer0.fired(){
        createNeighborsList();
 	   dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
-	   call Timer0.stop();
+	   //call Timer0.stop();
 
    }
  
    event void AMControl.startDone(error_t err){
-      //createNeighborsList();
       if(err == SUCCESS){
          dbg(GENERAL_CHANNEL, "Radio On\n");
 		
@@ -99,8 +98,6 @@ implementation{
 			
 			}
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
-			 
-				//dbg(FLOODING_CHANNEL, " neighbor probe proto %d \n" ,myMsg->protocol);
 				if(call neighborList.size() == 19){
 					return msg;
 				}
@@ -169,10 +166,6 @@ implementation{
 
     event void CommandHandler.printNeighbors(){
 		uint16_t i;
-		uint16_t t;
-		//createNeighborsList();
-		
-		
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		i = TOS_NODE_ID;
 		if(TOS_NODE_ID == 1)
@@ -216,7 +209,7 @@ implementation{
 					return TRUE;
 		}
 		return FALSE;
-   }
+    }
 
    void createNeighborsList(){
 		uint16_t i;
