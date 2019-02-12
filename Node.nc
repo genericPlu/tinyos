@@ -106,6 +106,7 @@ implementation{
 
 				else if(myMsg->protocol == 2){ 
 					call  neighborList.pushback(myMsg->src);
+					call  neighborMap.insert(counter++,myMsg->src);
 					//call  neighborList.pushback(5);
 					dbg(FLOODING_CHANNEL, "proto2 %d \n" ,call neighborList.size());
 					if(myMsg->src!=19){
@@ -168,13 +169,18 @@ implementation{
 		
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		i = TOS_NODE_ID;
-		if(TOS_NODE_ID == 1)
+		if(TOS_NODE_ID == 1){
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(1));
-		else if(TOS_NODE_ID == 19)
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborMap.get(1));
+		}
+		else if(TOS_NODE_ID == 19){
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(18));
-		else
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborMap.get(18));
+		{
+		else{
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d, %d\n",call neighborList.get(TOS_NODE_ID),call neighborList.get(TOS_NODE_ID-1));	
-		
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d, %d\n",call neighborMap.get(TOS_NODE_ID)), call neighborMap.get(TOS_NODE_ID-1);
+		}
 	}
 
    event void CommandHandler.printRouteTable(){}
@@ -217,6 +223,7 @@ implementation{
 		//for( i = 0; i < call neighborList.size(); i ++)
 			//call neighborList.popfront();
 		call neighborList.pushback(TOS_NODE_ID);
+		call  neighborMap.insert(counter++,TOS_NODE_ID);
 		//call neighborList.pushback(5);
 		dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
 		
