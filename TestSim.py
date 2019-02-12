@@ -139,14 +139,15 @@ def main():
     s.addChannel(s.GENERAL_CHANNEL);
     s.addChannel(s.FLOODING_CHANNEL);
     s.addChannel(s.NEIGHBOR_CHANNEL);
+
+    s.runTime(40);
+    s.ping(1, 19, 1); 
+    s.runTime(100);
+    for i in range(1,20):
+        s.runTime(100);
+        s.neighborDMP(i);
+        s.runTime(100);
+
 	
-    s.runTime(20);
-    s.ping(1, 2, "Hello, World");
-    s.runTime(10);
-    s.ping(1, 3, "Hi!");
-    s.runTime(20);
-    s.neighborDMP(1);
-	
-    
 if __name__ == '__main__':
     main()
