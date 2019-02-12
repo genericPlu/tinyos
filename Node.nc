@@ -160,6 +160,7 @@ implementation{
 		uint16_t t;
 		//createNeighborsList();
 		
+		
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		i = TOS_NODE_ID;
 		if(TOS_NODE_ID == 1)
@@ -167,7 +168,7 @@ implementation{
 		else if(TOS_NODE_ID == 19)
 			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(18));
 		else
-			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d, %d\n",call neighborList.get(TOS_NODE_ID),call neighborList.get(TOS_NODE_ID+1));	
+			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d, %d\n",call neighborList.get(TOS_NODE_ID),call neighborList.get(TOS_NODE_ID-1));	
 		
 	}
 
