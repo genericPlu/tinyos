@@ -144,12 +144,10 @@ def main():
     s.ping(1, 19, 1); 
     s.runTime(800);
     for i in range(1,20):
-        s.runTime(400);
+        s.runTime(100);
         s.neighborDMP(i);
-        s.runTime(400);
-    #s.runTime(400);
-    #s.neighborDMP(1);
-    #s.runTime(50);
+        s.runTime(100);
+
 	
 if __name__ == '__main__':
     main()
