@@ -171,7 +171,7 @@ implementation{
 		createNeighborsList();
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		t = call neighborList.popfront();
-		//dbg(NEIGHBOR_CHANNEL, "Neighbor %d\n",t[0])
+		dbg(NEIGHBOR_CHANNEL, "Neighbor %d\n",[0])
 		/*
 		for(i = 0; i < 2; i++){
 			if(t[i] != 0)
