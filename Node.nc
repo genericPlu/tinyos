@@ -160,7 +160,7 @@ implementation{
 		uint16_t t;
 		//createNeighborsList();
 		for(i = 0; i < call neighborList.size(); i++){
-			"Neighbors:%d\n",call neighborList.get(i));
+			dbg(NEIGHBOR_CHANNEL,"Neighbors:%d\n",call neighborList.get(i));
 		}
 		dbg(NEIGHBOR_CHANNEL, "Neighbor list for Node %d\n",TOS_NODE_ID);
 		i = TOS_NODE_ID;
