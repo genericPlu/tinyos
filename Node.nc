@@ -86,7 +86,10 @@ implementation{
 			 if(myMsg->dest == AM_BROADCAST_ADDR){
 			 
 				//dbg(FLOODING_CHANNEL, " neighbor probe proto %d \n" ,myMsg->protocol);
-				if(myMsg->protocol == 1){
+				if(call neighborList.size() == 19){
+					return msg;
+				}
+				else if(myMsg->protocol == 1){
 					dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
 					//if(call  neighborList.get(TOS_NODE_ID) !=myMsg->src)
 						//call  neighborList.pushback(myMsg->src);
