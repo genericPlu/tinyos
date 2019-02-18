@@ -143,13 +143,19 @@ def main():
     s.addChannel(s.NEIGHBOR_CHANNEL);
 
     s.runTime(40);
-    s.ping(1, 19, 1); 
+    s.ping(4, 7, 1); 
     s.runTime(100);
-    for i in range(1,20):
-        s.runTime(100);
-        s.neighborDMP(i);
-        s.runTime(100);
-
+    #for i in range(1,20):
+    #    s.runTime(100);
+    #    s.neighborDMP(i);
+    #    s.runTime(100);
+    s.neighborDMP(4);
+    s.runTime(10);
+    s.moteOff(3);
+    s.runTime(40);
+    s.neighborDMP(4);
+    s.runTime(10);
+	
 	
 if __name__ == '__main__':
     main()
