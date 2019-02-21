@@ -140,14 +140,9 @@ implementation{
 					inlist = FALSE;
 					return msg;
 				}
-			
 				return msg;
 			}
-			
 		}	
-		else{
-			return msg;
-		}
 		return msg;
 	  }
       dbg(GENERAL_CHANNEL, "Unknown Packet Type %d\n", len);
