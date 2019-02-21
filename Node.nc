@@ -4,7 +4,7 @@
  *
  * @author UCM ANDES Lab
  * @date   2013/09/03
- *Adam Pluguez CSE160 Project2 Updated 2/20/19
+ *Adam Pluguez CSE160 Project2 Updated 2/21/19
  
  */
 
@@ -32,7 +32,7 @@ module Node{
 
    uses interface Flooding;
    
-   uses interface List<pack> as sentlist;
+   uses interface Routing;
    
 }
 
@@ -54,6 +54,7 @@ implementation{
 	  if(err == SUCCESS){
          dbg(GENERAL_CHANNEL, "Radio On\n");
 		 call NeighborDiscovery.run();
+		 //call Routing.createTable();
       }else{
          //Retry until successful
          call AMControl.start();
@@ -89,11 +90,11 @@ implementation{
    }
 
    event void CommandHandler.printRouteTable(){
-   
+		//call Routing.printRouteTable();
    }
 
    event void CommandHandler.printLinkState(){
-   
+		//call Routing.printLinkState();
    }
 
    event void CommandHandler.printDistanceVector(){}

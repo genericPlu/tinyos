@@ -20,15 +20,12 @@ implementation {
     components MainC;
     components Node;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
-    components new ListC(pack,MAX_NODES) as sentlist;
 	
     
 
     Node -> MainC.Boot;
 	
     Node.Receive -> GeneralReceive;
-	      
-    Node.sentlist -> sentlist; 
 	
     components ActiveMessageC;
     Node.AMControl -> ActiveMessageC;
@@ -44,4 +41,7 @@ implementation {
 	
 	components FloodingC;
 	Node.Flooding->FloodingC;
+	
+	components RoutingC;
+	Node.Routing->RoutingC;
 }

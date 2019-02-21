@@ -1,13 +1,12 @@
-/*
+/**
  * ANDES Lab - University of California, Merced
-   This class provides the basic functions of a network node.
+   This class provides NeighborDiscovery.
  *
- * @author UCM ANDES Lab
- * @date   2013/09/03
- *Adam Pluguez CSE160 Project1 Updated 2/12/19
- 
+ * @author Adam Pluguez CSE160 Project1 Updated 2/12/19
+ * @date   2/21/19
  */
 /*
+
 #include "includes/command.h"
 #include "includes/packet.h"
 #include "includes/CommandMsg.h"
@@ -80,7 +79,6 @@ implementation{
 		if(myMsg->TTL != 0 && myMsg->dest == AM_BROADCAST_ADDR){
 			if(myMsg->protocol == PROTOCOL_PING){
 				makePack(&discoveryPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, --myMsg->TTL, PROTOCOL_PINGREPLY, ++myMsg->seq,(uint8_t*) myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-				//call sentlist.pushback(discoveryPackage);
 				call DiscoverySender.send(discoveryPackage, myMsg->src);
 			}
 			else if(myMsg->protocol == PROTOCOL_PINGREPLY){ 

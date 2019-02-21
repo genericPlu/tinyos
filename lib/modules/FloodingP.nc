@@ -1,11 +1,9 @@
-/*
+/**
  * ANDES Lab - University of California, Merced
-   This class provides the basic functions of a network node.
+   This class provides Flooding.
  *
- * @author UCM ANDES Lab
- * @date   2013/09/03
- *Adam Pluguez CSE160 Project1 Updated 2/12/19
- 
+ * @author Adam Pluguez CSE160 Project1 Updated 2/12/19
+ * @date   2/21/19
  */
 
 
@@ -31,7 +29,7 @@ implementation{
   //Added prototypes
    bool checkSentList(pack *Package);
    
-   command error_t Flooding.floodSend(pack msg, uint16_t destination){
+   command void Flooding.floodSend(pack msg, uint16_t destination){
 		msg.src = TOS_NODE_ID;
 		msg.dest = destination;
 		msg.TTL = 20;
@@ -47,32 +45,31 @@ implementation{
 			if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
 				dbg(FLOODING_CHANNEL, "Packet Received at destination Node %d \n", TOS_NODE_ID);
 				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence %d\n", myMsg->payload, myMsg->seq);
-				//return msg;
+				
 			}
 			else if (myMsg->dest != myMsg->src && myMsg->dest != AM_BROADCAST_ADDR&& myMsg->protocol == 0){
-				makePack(&floodPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				makePack(&floodPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,(uint8_t*)myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call sentList.pushback(floodPackage);
 				dbg(FLOODING_CHANNEL, "Flooding Packet Received at Node %d for Node %d. Resending..\n", TOS_NODE_ID, myMsg->dest);
 				call FloodSender.send(floodPackage, AM_BROADCAST_ADDR);
 				dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
-				//return msg;
+				
 			
 			}
 			else if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
 				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
 				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence %d\n", myMsg->payload, myMsg->seq);
-				//return msg;
+				
 			}
 			else if (myMsg->dest != myMsg->src && myMsg->dest != AM_BROADCAST_ADDR&& myMsg->protocol == 0){
-				makePack(&floodPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, ++myMsg->seq,myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				makePack(&floodPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, ++myMsg->seq,(uint8_t*)myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call sentList.pushback(floodPackage);
 				dbg(FLOODING_CHANNEL, "Flooding Packet Received at Node %d for Node %d. Resending..\n", TOS_NODE_ID, myMsg->dest);
 				call FloodSender.send(floodPackage, AM_BROADCAST_ADDR);
 				dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
-				//return msg;
+
 			}
 		}	
-		return msg;
 	  }
 	  return msg;
     }
