@@ -4,7 +4,7 @@
  *
  * @author UCM ANDES Lab
  * @date   2013/09/03
- *Adam Pluguez CSE160 Project1 Updated 2/12/19
+ *Adam Pluguez CSE160 Project2 Updated 2/20/19
  
  */
 
@@ -20,6 +20,10 @@ typedef struct moteN{
 		uint16_t tls;
    }moteN;
    
+typedef struct LinkState{
+		
+}LinkState;
+   
 module Node{
    uses interface Boot;
 
@@ -34,12 +38,12 @@ module Node{
    
    uses interface Timer<TMilli> as Timer0;
    
-   uses interface Hashmap<uint16_t> as neighborMap;
+   uses interface Hashmap<moteN> as neighborMap;
    
    uses interface List<pack> as sentlist;
    
    uses interface List<uint16_t*> as neighborList;
-   uses interface List<moteN*> as neighborList2;
+   uses interface List<moteN> as neighborList2;
    
 }
 
@@ -58,8 +62,9 @@ implementation{
    //Added Timer0
    event void Boot.booted(){
       call AMControl.start();
-	  //call Timer0.startPeriodic(300000);
-	  call Timer0.startPeriodicAt(5000,300000);
+	  createNeighborsList();
+	  call Timer0.startPeriodic(50000);
+	  //call Timer0.startPeriodicAt(5000,300000);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
@@ -85,7 +90,11 @@ implementation{
 	
    //Modifed for flooding and neighbor discovery
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-      if(len==sizeof(pack)){
+      uint16_t i;
+	  moteN found;
+	  moteN temp;
+	  bool inlist = FALSE;
+	  if(len==sizeof(pack)){
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
 			if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
@@ -96,7 +105,7 @@ implementation{
 				return msg;
 			}
 			else if (myMsg->dest != myMsg->src && myMsg->dest != AM_BROADCAST_ADDR&& myMsg->protocol == 0){
-				makePack(&sendPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,(void*)myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				makePack(&sendPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,(uint8_t*)myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call sentlist.pushback(sendPackage);
 				dbg(FLOODING_CHANNEL, "Flooding Packet Received at Node %d for Node %d. Resending..\n", TOS_NODE_ID, myMsg->dest);
 				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
@@ -104,41 +113,37 @@ implementation{
 				return msg;
 			
 			}
+			//Neighbor Discovery
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
-				if(call neighborList.size() == 19){
-					return msg;
-				}
-				else if(myMsg->protocol == 1){
-					//dbg(FLOODING_CHANNEL, "Node %d \n" , TOS_NODE_ID);
-					if(call  neighborList.get(TOS_NODE_ID) !=(void*)(long)myMsg->src &&  call neighborList.get(TOS_NODE_ID-1) !=(void*)(long)myMsg->src)
-						call  neighborList.pushback((void*)(long)myMsg->src);
-					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, --myMsg->TTL, 2, ++myMsg->seq,(void*) myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+				//dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery Packet Recieved at Node %d  \n" , TOS_NODE_ID);
+				if(myMsg->protocol == 1){
+					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, --myMsg->TTL, 2, ++myMsg->seq,(uint8_t*) myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 					call sentlist.pushback(sendPackage);
 					call Sender.send(sendPackage, myMsg->src);
-					
-					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, 2, 1, ++myMsg->seq,(void*)myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-					call sentlist.pushback(sendPackage);
-					call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+					//dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery sending neighbor response to Node %d  \n" , myMsg->src);
 					
 					return msg;
 				}
 
 				else if(myMsg->protocol == 2){ 
-					if(call  neighborList.get(TOS_NODE_ID) !=(void*)(long)myMsg->src && call neighborList.get(TOS_NODE_ID-1) !=(void*)(long)myMsg->src)
-						call  neighborList.pushback((void*)(long)myMsg->src);
-					if(myMsg->src!=19){
-						makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, --myMsg->TTL, 1, ++myMsg->seq, (void*)myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-						call sentlist.pushback(sendPackage);
-						call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+					//dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery Node %d  \n" , TOS_NODE_ID);
+					found.id = myMsg->src;
+					found.tls = 5;
+					for(i = 0; i < call neighborList2.size();i++){
+						temp = call neighborList2.popfront();
+						if(temp.id == found.id){
+							inlist = TRUE;
+							temp.tls++;
+						}
+						call neighborList2.pushback(temp);
 					}
+					if(inlist == FALSE){
+						call neighborList2.pushfront(found);
+					}
+					inlist = FALSE;
 					return msg;
 				}
 			
-				return msg;
-			}
-			else if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
-				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
-				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence %d\n", myMsg->payload, myMsg->seq);
 				return msg;
 			}
 			
@@ -156,21 +161,20 @@ implementation{
 
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
       //dbg(GENERAL_CHANNEL, "PING EVENT \n");
-	  //dbg(FLOODING_CHANNEL, "Flooding Network... \n");
       makePack(&sendPackage, TOS_NODE_ID, destination, 20, 0, ++sequence, payload, PACKET_MAX_PAYLOAD_SIZE);
 	  call sentlist.pushback(sendPackage);
       call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-	  //dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, destination);
+
 	  
    }
 
     event void CommandHandler.printNeighbors(){
-		if(TOS_NODE_ID == 1)
-			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(1));
-		else if(TOS_NODE_ID == 19)
-			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d\n",call neighborList.get(18));
-		else
-			dbg(NEIGHBOR_CHANNEL, "Neighbors:%d, %d\n",call neighborList.get(TOS_NODE_ID),call neighborList.get(TOS_NODE_ID-1));	
+		uint16_t i;
+		moteN neighbor1;
+		for(i = 0; i < call neighborList2.size();i++){
+			neighbor1 = call neighborList2.get(i);
+			dbg(NEIGHBOR_CHANNEL, "Node %d, Neighbor:%d tls: %d\n",TOS_NODE_ID,neighbor1.id, neighbor1.tls);
+		}
 		
 	}
 
@@ -209,14 +213,24 @@ implementation{
     }
 
    void createNeighborsList(){
-		void* payload;
-		call neighborList.pushback((void*)(long)TOS_NODE_ID);
-		//dbg(NEIGHBOR_CHANNEL, "Creating neighbor list...\n");
+		uint16_t i;
+		moteN temp;
+		char* payload = "hi";
+		if(!call neighborList2.isEmpty()){
+			for(i=0;i< call neighborList2.size();i++){
+				temp = call neighborList2.popfront();
+				if(temp.tls != 0){
+					temp.tls--;
+					call neighborList2.pushback(temp);
+				}
+				
+			}
+		}
 		
-		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 1, 50, payload, PACKET_MAX_PAYLOAD_SIZE);
-		call sentlist.pushback(sendPackage);
-		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-		
+			makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, 1, 50, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
+			call sentlist.pushback(sendPackage);
+			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+			
 		
    }
    

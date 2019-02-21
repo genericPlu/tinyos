@@ -20,8 +20,8 @@ implementation {
     components new TimerMilliC() as Timer0;
     components new ListC(pack,40) as sentlist;
 	components new ListC(uint16_t*,19) as neighborList;
-	components new ListC(moteN*,19) as neighborList2;
-	components new HashmapC(uint16_t,40) as neighborMap;
+	components new ListC(moteN,19) as neighborList2;
+	components new HashmapC(moteN,40) as neighborMap;
 	components RandomC as Random;
     
 
