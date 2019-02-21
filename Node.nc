@@ -26,17 +26,13 @@ module Node{
    uses interface Random as Random;
    
    uses interface SimpleSend as Sender;
-
+	
+   uses interface NeighborDiscovery ;
+   
    uses interface CommandHandler;
-   
-   uses interface Timer<TMilli> as Timer0;
-   
-   uses interface Hashmap<moteN> as neighborMap;
    
    uses interface List<pack> as sentlist;
    
-   uses interface List<moteN> as neighborList;
-   uses interface List<moteN> as neighborList2;
    
 }
 
@@ -48,28 +44,20 @@ implementation{
    // Prototypes
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
    bool checkSentList(pack *Package);
-   void createNeighborsList();
    
   
    event void Boot.booted(){
-	  uint32_t randStart;
-	  uint32_t randFire;
       call AMControl.start();
-	  randStart = call Random.rand32() % 25;
-	  randFire = call Random.rand32() % 1000;
-	  call Timer0.startPeriodicAt(randStart,45000-randFire);
       dbg(GENERAL_CHANNEL, "Booted\n");
+	  
    }
    
   
-   event void Timer0.fired(){ 
-       createNeighborsList();
-   }
  
    event void AMControl.startDone(error_t err){
-      if(err == SUCCESS){
+	  if(err == SUCCESS){
          dbg(GENERAL_CHANNEL, "Radio On\n");
-		
+		 call NeighborDiscovery.run();
       }else{
          //Retry until successful
          call AMControl.start();
@@ -80,10 +68,6 @@ implementation{
 	
    //Modifed for flooding and neighbor discovery
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-      uint16_t i;
-	  moteN found;
-	  moteN temp;
-	  bool inlist = FALSE;
 	  if(len==sizeof(pack)){
         pack* myMsg=(pack*) payload;
         if(myMsg->TTL != 0 && !checkSentList(myMsg)){ 
@@ -102,30 +86,6 @@ implementation{
 				//dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 				return msg;
 			
-			}
-			//Neighbor Discovery
-			else if(myMsg->dest == AM_BROADCAST_ADDR){
-				if(myMsg->protocol == PROTOCOL_PING){
-					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, --myMsg->TTL, PROTOCOL_PINGREPLY, ++myMsg->seq,(uint8_t*) myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-					call sentlist.pushback(sendPackage);
-					call Sender.send(sendPackage, myMsg->src);
-				}
-				else if(myMsg->protocol == PROTOCOL_PINGREPLY){ 
-					found.id = myMsg->src;
-					found.tls = 5;
-					for(i = 0; i < call neighborList.size();i++){
-						temp = call neighborList.popfront();
-						if(temp.id == found.id){
-							inlist = TRUE;
-							temp.tls++;
-						}
-						call neighborList.pushback(temp);
-					}
-					if(inlist == FALSE){
-						call neighborList.pushfront(found);
-					}
-					inlist = FALSE;	
-				}
 			}
 		}	
 		return msg;
@@ -146,12 +106,7 @@ implementation{
    }
 
     event void CommandHandler.printNeighbors(){
-		uint16_t i;
-		moteN neighbor1;
-		for(i = 0; i < call neighborList.size();i++){
-			neighbor1 = call neighborList.get(i);
-			dbg(NEIGHBOR_CHANNEL, "Node %d, Neighbor:%d\n",TOS_NODE_ID,neighbor1.id);
-		}
+		call NeighborDiscovery.printNeighbors();
 		
 	}
 
@@ -188,27 +143,5 @@ implementation{
 		}
 		return FALSE;
     }
-
-   void createNeighborsList(){
-		uint16_t i;
-		moteN temp;
-		char* payload = "";
-		
-		//Check if list is empty and reduce time last seen(tls)
-		if(!call neighborList.isEmpty()){
-			for(i=0;i< call neighborList.size();i++){
-				temp = call neighborList.popfront();
-				temp.tls--;
-				if(temp.tls != 0){	
-					call neighborList.pushback(temp);
-				}
-				
-			}
-		}
-		//Send out Discovery Packet
-		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, PROTOCOL_PING, 50, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
-		call sentlist.pushback(sendPackage);
-		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-   }
    
 }

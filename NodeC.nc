@@ -10,7 +10,7 @@
 #include <Timer.h>
 #include "includes/CommandMsg.h"
 #include "includes/packet.h"
-//#include "includes/moteN.h"
+
 
 #define MAX_NODES 255
 
@@ -20,26 +20,16 @@ implementation {
     components MainC;
     components Node;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
-    components new TimerMilliC() as Timer0;
     components new ListC(pack,MAX_NODES) as sentlist;
-	components new ListC(moteN,MAX_NODES) as neighborList;
-	components new ListC(moteN,MAX_NODES) as neighborList2;
-	components new HashmapC(moteN,MAX_NODES) as neighborMap;
-	components RandomC as Random;
+	
     
 
     Node -> MainC.Boot;
 	
     Node.Receive -> GeneralReceive;
-	
-	
-    Node.Timer0 -> Timer0;        
+	      
     Node.sentlist -> sentlist; 
-	Node.neighborList ->neighborList;
-	Node.neighborList ->neighborList2;
-	Node.Random -> Random;
-    Node.neighborMap ->neighborMap;
-
+	
     components ActiveMessageC;
     Node.AMControl -> ActiveMessageC;
 
@@ -48,4 +38,7 @@ implementation {
 
     components CommandHandlerC;
     Node.CommandHandler -> CommandHandlerC;
+
+    components NeighborDiscoveryC;
+	Node.NeighborDiscovery->NeighborDiscoveryC;
 }
