@@ -138,9 +138,9 @@ implementation{
 						call neighborList.pushfront(found);
 					}
 					inlist = FALSE;
-					return msg;
+					
 				}
-				return msg;
+				
 			}
 		}	
 		return msg;
