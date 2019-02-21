@@ -8,16 +8,16 @@
  */
 
 #define MAX_NODES 255
-
+#define AM_DISC 70
 configuration NeighborDiscoveryC{
 	provides interface NeighborDiscovery;
 }
 implementation {
 	components NeighborDiscoveryP;
-    components new AMReceiverC(AM_PACK);
+    components new AMReceiverC(AM_DISC);
 	components new TimerMilliC() as DiscoveryTimer;
 	components new ListC(moteN,MAX_NODES) as neighborList;
-	components new SimpleSendC(AM_PACK);
+	components new SimpleSendC(AM_DISC);
 	components RandomC as Random;
     
 	NeighborDiscoveryP.Random -> Random;

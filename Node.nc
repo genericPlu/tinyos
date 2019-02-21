@@ -63,10 +63,10 @@ implementation{
    event void AMControl.stopDone(error_t err){}
 
    event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
-	  //dbg(GENERAL_CHANNEL, "Packet Received\n");
+	  dbg(GENERAL_CHANNEL, "Packet Received\n");
 	  if(len==sizeof(pack)){
         pack* myMsg=(pack*) payload;
-        //dbg(GENERAL_CHANNEL, "Package Payload %s\n", myMsg->payload);
+        dbg(GENERAL_CHANNEL, "Package Payload %s\n", myMsg->payload);
 		return msg;
 	  }
       
@@ -80,7 +80,8 @@ implementation{
    event void CommandHandler.ping(uint16_t destination, uint8_t *payload){
       dbg(GENERAL_CHANNEL, "PING EVENT \n");
       makePack(&sendPackage, TOS_NODE_ID, destination, 20, PROTOCOL_PING, ++sequence, payload, PACKET_MAX_PAYLOAD_SIZE);
-      call Sender.send(sendPackage, AM_BROADCAST_ADDR);
+      call Sender.send(sendPackage, destination);
+	  call Flooding.floodSend(sendPackage, destination);
    }
 
    event void CommandHandler.printNeighbors(){

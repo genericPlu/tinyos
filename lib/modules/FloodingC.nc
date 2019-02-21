@@ -7,20 +7,20 @@
  * Adam Pluguez CSE160 Project1 Updated 2/12/19
  */
 #define MAX_NODES 255
-
+#define AM_FLOOD 80
 configuration FloodingC{
 	provides interface Flooding;
 }
 
 implementation {
 	components FloodingP;
-    components new AMReceiverC(AM_PACK) as FloodReceive;
+    components new AMReceiverC(AM_FLOOD) as FloodReceive;
     components new ListC(pack,MAX_NODES) as sentList;
 
     FloodingP.FloodReceive -> FloodReceive;	        
     FloodingP.sentList -> sentList; 
 
-    components new SimpleSendC(AM_PACK);
+    components new SimpleSendC(AM_FLOOD);
     FloodingP.FloodSender -> SimpleSendC;
 
 	Flooding = FloodingP.Flooding;
