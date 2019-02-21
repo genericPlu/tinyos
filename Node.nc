@@ -14,16 +14,9 @@
 #include "includes/CommandMsg.h"
 #include "includes/sendInfo.h"
 #include "includes/channels.h"
+#include "includes/moteN.h"
 
-typedef struct moteN{
-		uint16_t id;
-		uint16_t tls;
-   }moteN;
-   
-typedef struct LinkState{
-		
-}LinkState;
-   
+
 module Node{
    uses interface Boot;
 
@@ -43,13 +36,14 @@ module Node{
    uses interface List<pack> as sentlist;
    
    uses interface List<moteN> as neighborList;
+   uses interface List<moteN> as neighborList2;
    
 }
 
 implementation{
    uint8_t sequence = 0;
+   pack sendPackage;  
    
-   pack sendPackage;
 
    // Prototypes
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
@@ -58,19 +52,18 @@ implementation{
    
   
    event void Boot.booted(){
+	  uint32_t randStart;
+	  uint32_t randFire;
       call AMControl.start();
-	  createNeighborsList();
-	  call Timer0.startPeriodic(50000);
-	  //call Timer0.startPeriodicAt(5000,300000);
+	  randStart = call Random.rand32() % 25;
+	  randFire = call Random.rand32() % 1000;
+	  call Timer0.startPeriodicAt(randStart,45000-randFire);
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
   
    event void Timer0.fired(){ 
        createNeighborsList();
-	   //dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
-
-
    }
  
    event void AMControl.startDone(error_t err){
@@ -104,25 +97,20 @@ implementation{
 			else if (myMsg->dest != myMsg->src && myMsg->dest != AM_BROADCAST_ADDR&& myMsg->protocol == PROTOCOL_PING){
 				makePack(&sendPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, myMsg->seq,(uint8_t*)myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call sentlist.pushback(sendPackage);
-				dbg(FLOODING_CHANNEL, "Flooding Packet Received at Node %d for Node %d. Resending..\n", TOS_NODE_ID, myMsg->dest);
+				//dbg(FLOODING_CHANNEL, "Flooding Packet Received at Node %d for Node %d. Resending..\n", TOS_NODE_ID, myMsg->dest);
 				call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-				dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
+				//dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
 				return msg;
 			
 			}
 			//Neighbor Discovery
 			else if(myMsg->dest == AM_BROADCAST_ADDR){
-				//dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery Packet Recieved at Node %d  \n" , TOS_NODE_ID);
 				if(myMsg->protocol == PROTOCOL_PING){
 					makePack(&sendPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, --myMsg->TTL, PROTOCOL_PINGREPLY, ++myMsg->seq,(uint8_t*) myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 					call sentlist.pushback(sendPackage);
 					call Sender.send(sendPackage, myMsg->src);
-					//dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery sending neighbor response to Node %d  \n" , myMsg->src);
-					
-					return msg;
 				}
 				else if(myMsg->protocol == PROTOCOL_PINGREPLY){ 
-					//dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery Node %d  \n" , TOS_NODE_ID);
 					found.id = myMsg->src;
 					found.tls = 5;
 					for(i = 0; i < call neighborList.size();i++){
@@ -162,7 +150,7 @@ implementation{
 		moteN neighbor1;
 		for(i = 0; i < call neighborList.size();i++){
 			neighbor1 = call neighborList.get(i);
-			dbg(NEIGHBOR_CHANNEL, "Node %d, Neighbor:%d \n",TOS_NODE_ID,neighbor1.id);
+			dbg(NEIGHBOR_CHANNEL, "Node %d, Neighbor:%d\n",TOS_NODE_ID,neighbor1.id);
 		}
 		
 	}
@@ -204,23 +192,23 @@ implementation{
    void createNeighborsList(){
 		uint16_t i;
 		moteN temp;
-		char* payload = "hi";
+		char* payload = "";
+		
+		//Check if list is empty and reduce time last seen(tls)
 		if(!call neighborList.isEmpty()){
 			for(i=0;i< call neighborList.size();i++){
 				temp = call neighborList.popfront();
-				if(temp.tls != 0){
-					temp.tls--;
+				temp.tls--;
+				if(temp.tls != 0){	
 					call neighborList.pushback(temp);
 				}
 				
 			}
 		}
-		
-			makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, PROTOCOL_PING, 50, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
-			call sentlist.pushback(sendPackage);
-			call Sender.send(sendPackage, AM_BROADCAST_ADDR);
-			
-		
+		//Send out Discovery Packet
+		makePack(&sendPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, PROTOCOL_PING, 50, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
+		call sentlist.pushback(sendPackage);
+		call Sender.send(sendPackage, AM_BROADCAST_ADDR);
    }
    
 }

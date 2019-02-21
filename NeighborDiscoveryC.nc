@@ -13,21 +13,19 @@ configuration NeighborDiscoveryC{
 }
 implementation {
 
-    components new AMReceiverC(AM_PACK) as GeneralReceive;
+    components new AMReceiverC(AM_PACK) as DiscoveryReceive;
 
-    components new ListC(pack,40) as list;
+	components new ListC(moteN,MAX_NODES) as neighborList;
 	
-    NeighborDiscovery.Receive -> GeneralReceive;
+    NeighborDiscovery.DiscoveryReceive -> DiscoveryReceive;
  
 	NeighborDiscovery.neighborList ->neighborList;
 	
-    NeighborDiscovery.neighborMap ->neighborMap;
-
     components ActiveMessageC;
     NeighborDiscovery.AMControl -> ActiveMessageC;
 
     components new SimpleSendC(AM_PACK);
-    NeighborDiscovery.Sender -> SimpleSendC;
+    NeighborDiscovery.DiscoverySender -> SimpleSendC;
 
     components CommandHandlerC;
     NeighborDiscovery.CommandHandler -> CommandHandlerC;

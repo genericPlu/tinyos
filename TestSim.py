@@ -145,10 +145,10 @@ def main():
     s.runTime(40);
     s.ping(4, 7, 1); 
     s.runTime(30);
-    for i in range(1,20):
-        s.runTime(10);
-        s.neighborDMP(i);
-        s.runTime(10);
+    #for i in range(1,20):
+    #    s.runTime(10);
+    #    s.neighborDMP(i);
+    #    s.runTime(10);
     s.neighborDMP(4);
     s.runTime(40);
     s.moteOff(3);
