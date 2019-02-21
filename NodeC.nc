@@ -19,8 +19,7 @@ implementation {
     components new AMReceiverC(AM_PACK) as GeneralReceive;
     components new TimerMilliC() as Timer0;
     components new ListC(pack,40) as sentlist;
-	components new ListC(uint16_t*,19) as neighborList;
-	components new ListC(moteN,19) as neighborList2;
+	components new ListC(moteN,19) as neighborList;
 	components new HashmapC(moteN,40) as neighborMap;
 	components RandomC as Random;
     
@@ -29,11 +28,11 @@ implementation {
 	
     Node.Receive -> GeneralReceive;
 	
-	/*Added Timer, Random, Two Lists, and Hashmap (not all used)*/
+	
     Node.Timer0 -> Timer0;        
     Node.sentlist -> sentlist; 
 	Node.neighborList ->neighborList;
-	Node.neighborList2 ->neighborList2;
+	
 	Node.Random -> Random;
     Node.neighborMap ->neighborMap;
 

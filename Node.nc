@@ -42,8 +42,7 @@ module Node{
    
    uses interface List<pack> as sentlist;
    
-   uses interface List<uint16_t*> as neighborList;
-   uses interface List<moteN> as neighborList2;
+   uses interface List<moteN> as neighborList;
    
 }
 
@@ -54,12 +53,10 @@ implementation{
 
    // Prototypes
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
-  
-  //Added prototypes
    bool checkSentList(pack *Package);
    void createNeighborsList();
    
-   //Added Timer0
+  
    event void Boot.booted(){
       call AMControl.start();
 	  createNeighborsList();
@@ -68,7 +65,7 @@ implementation{
       dbg(GENERAL_CHANNEL, "Booted\n");
    }
    
-   //Added Timer0 firing event to create neighbor list
+  
    event void Timer0.fired(){ 
        createNeighborsList();
 	   //dbg(GENERAL_CHANNEL, "TIMER FIRED\n");
@@ -129,16 +126,16 @@ implementation{
 					//dbg(NEIGHBOR_CHANNEL, "Neighbor Discovery Node %d  \n" , TOS_NODE_ID);
 					found.id = myMsg->src;
 					found.tls = 5;
-					for(i = 0; i < call neighborList2.size();i++){
-						temp = call neighborList2.popfront();
+					for(i = 0; i < call neighborList.size();i++){
+						temp = call neighborList.popfront();
 						if(temp.id == found.id){
 							inlist = TRUE;
 							temp.tls++;
 						}
-						call neighborList2.pushback(temp);
+						call neighborList.pushback(temp);
 					}
 					if(inlist == FALSE){
-						call neighborList2.pushfront(found);
+						call neighborList.pushfront(found);
 					}
 					inlist = FALSE;
 					return msg;
@@ -171,9 +168,9 @@ implementation{
     event void CommandHandler.printNeighbors(){
 		uint16_t i;
 		moteN neighbor1;
-		for(i = 0; i < call neighborList2.size();i++){
-			neighbor1 = call neighborList2.get(i);
-			dbg(NEIGHBOR_CHANNEL, "Node %d, Neighbor:%d tls: %d\n",TOS_NODE_ID,neighbor1.id, neighbor1.tls);
+		for(i = 0; i < call neighborList.size();i++){
+			neighbor1 = call neighborList.get(i);
+			dbg(NEIGHBOR_CHANNEL, "Node %d, Neighbor:%d \n",TOS_NODE_ID,neighbor1.id);
 		}
 		
 	}
@@ -216,12 +213,12 @@ implementation{
 		uint16_t i;
 		moteN temp;
 		char* payload = "hi";
-		if(!call neighborList2.isEmpty()){
-			for(i=0;i< call neighborList2.size();i++){
-				temp = call neighborList2.popfront();
+		if(!call neighborList.isEmpty()){
+			for(i=0;i< call neighborList.size();i++){
+				temp = call neighborList.popfront();
 				if(temp.tls != 0){
 					temp.tls--;
-					call neighborList2.pushback(temp);
+					call neighborList.pushback(temp);
 				}
 				
 			}

@@ -143,7 +143,7 @@ def main():
     s.addChannel(s.NEIGHBOR_CHANNEL);
 
     s.runTime(40);
-    #s.ping(4, 7, 1); 
+    s.ping(4, 7, 1); 
     s.runTime(30);
     for i in range(1,20):
         s.runTime(10);
