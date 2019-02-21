@@ -7,8 +7,6 @@
  * Adam Pluguez CSE160 Project1 Updated 2/12/19
  */
 
-//#include "includes/CommandMsg.h"
-//#include "includes/packet.h"
 #define MAX_NODES 255
 
 configuration NeighborDiscoveryC{

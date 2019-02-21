@@ -109,7 +109,7 @@ implementation{
 		moteN temp;
 		char* payload = "";
 		
-		//Check if list is empty and reduce time last seen(tls)
+		//Check if neighbor list is empty and reduce time last seen(tls)
 		if(!call neighborList.isEmpty()){
 			for(i=0;i< call neighborList.size();i++){
 				temp = call neighborList.popfront();
@@ -120,9 +120,8 @@ implementation{
 				
 			}
 		}
-		//Send out Discovery Packet
+		//Send out Discovery Packet, start neighbor list creation/update
 		makePack(&discoveryPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, PROTOCOL_PING, 50, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
-		//call sentlist.pushback(discoveryPackage);
 		call DiscoverySender.send(discoveryPackage, AM_BROADCAST_ADDR);
    }
    
