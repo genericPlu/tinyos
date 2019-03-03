@@ -34,6 +34,7 @@ implementation{
 		msg.dest = destination;
 		msg.TTL = 20;
 		msg.seq = sequence++;
+		call sentList.pushback(msg);
 		call FloodSender.send(msg, AM_BROADCAST_ADDR);
    
    }
@@ -56,19 +57,8 @@ implementation{
 				
 			
 			}
-			else if(TOS_NODE_ID == myMsg->dest && myMsg->protocol == 0){
-				dbg(FLOODING_CHANNEL, "Packet Received at Node %d \n", TOS_NODE_ID);
-				dbg(FLOODING_CHANNEL, "Package Payload: %s Sequence %d\n", myMsg->payload, myMsg->seq);
-				
-			}
-			else if (myMsg->dest != myMsg->src && myMsg->dest != AM_BROADCAST_ADDR&& myMsg->protocol == 0){
-				makePack(&floodPackage, myMsg->src, myMsg->dest, --myMsg->TTL, 0, ++myMsg->seq,(uint8_t*)myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
-				call sentList.pushback(floodPackage);
-				dbg(FLOODING_CHANNEL, "Flooding Packet Received at Node %d for Node %d. Resending..\n", TOS_NODE_ID, myMsg->dest);
-				call FloodSender.send(floodPackage, AM_BROADCAST_ADDR);
-				dbg(FLOODING_CHANNEL, "Flooding Packet sent from Node %d to Node %d \n" , TOS_NODE_ID, myMsg->dest);
-
-			}
+			
+			
 		}	
 	  }
 	  return msg;
