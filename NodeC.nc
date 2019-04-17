@@ -12,7 +12,7 @@
 #include "includes/packet.h"
 
 
-#define MAX_NODES 255
+#define MAX_NODES 20
 
 configuration NodeC{
 }
@@ -21,7 +21,15 @@ implementation {
     components Node;
     components new AMReceiverC(AM_PACK) as GeneralReceive;
 	
-    
+	//ADDed
+	components new TimerMilliC() as neighborTimer;
+	components new ListC(moteN,MAX_NODES) as neighborList;
+	components new ListC(pack, MAX_NODES) as sentList;
+	components new ListC(linkState, MAX_NODES) as linkStateList;
+    Node.neighborTimer -> neighborTimer;
+    Node.sentList -> sentList;
+    Node.neighborList -> neighborList;
+	Node.linkStateList -> linkStateList;
 
     Node -> MainC.Boot;
 	

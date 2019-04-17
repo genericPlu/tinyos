@@ -8,7 +8,7 @@
 
 
 
-#define MAX_NODES 255
+
 #define AM_FLOOD 80
 configuration FloodingC{
 	provides interface Flooding;

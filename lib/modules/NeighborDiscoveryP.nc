@@ -22,31 +22,41 @@ module NeighborDiscoveryP{
    uses interface Timer<TMilli> as DiscoveryTimer;
    uses interface SimpleSend as DiscoverySender;
    uses interface List<moteN> as neighborList;
-   
+   uses interface List<pack> as sentList;
+   uses interface Routing;
    provides interface NeighborDiscovery;
 
 }
 
 implementation{
+   uint16_t received = 0;
+   moteN returnList[20];
+   bool check = FALSE;
    pack discoveryPackage; 
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
    void createNeighborsList();
-   
+   bool checkSentList(pack *Package);
+   void updateNeighborsList();
+   void removeNeighbor(uint16_t id);
    command void NeighborDiscovery.run(){
 		uint32_t randStart;
 		uint32_t randFire;
 		randStart = call Random.rand32() % 25;
-		randFire = call Random.rand32() % 1000;
-		call DiscoveryTimer.startPeriodicAt(randStart,45000-randFire);
+		randFire = call Random.rand32() % 500;
+		//call DiscoveryTimer.startPeriodicAt(1000-randFire,7000-randFire);
+		//call DiscoveryTimer.startPeriodic(10000-randFire);
+		call DiscoveryTimer.startPeriodic(5000);
+		 //call DiscoveryTimer.startOneShot(1000);
    }
    
    command void NeighborDiscovery.printNeighbors(){
 		uint16_t i;
-		moteN neighbor1;
+		moteN neighbor;
 		for(i = 0; i < call neighborList.size();i++){
-			neighbor1 = call neighborList.get(i);
-			dbg(NEIGHBOR_CHANNEL, "Node %d, Neighbor:%d\n",TOS_NODE_ID,neighbor1.id);
+			neighbor = call neighborList.get(i);
+			dbg(NEIGHBOR_CHANNEL, "Node %d, Neighbor:%d\n",TOS_NODE_ID,neighbor.id);
 		}
+		//dbg(NEIGHBOR_CHANNEL,"received:%d\n",received);
    }
    
    command uint16_t NeighborDiscovery.neighborListSize(){
@@ -57,71 +67,133 @@ implementation{
    
    command moteN* NeighborDiscovery.neighborList(){
 		uint16_t i;
-		moteN returnList[call neighborList.size()];
-		for(i=0;i<call neighborList.size();i++){
-			returnList[i] = call neighborList.get(i);
+		moteN neighbor;
+		
+		for(i=0;i < call neighborList.size();i++){ 
+			neighbor = call neighborList.get(i);
+			returnList[i] = neighbor;
 		}
 		
 		return returnList;
    }
    event void DiscoveryTimer.fired(){ 
-       createNeighborsList();
+       char* payload = "";
+	   updateNeighborsList();
+		//Send out Discovery Packet, start neighbor list creation
+	   makePack(&discoveryPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, PROTOCOL_PING, 50, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
+		//dbg(NEIGHBOR_CHANNEL,"sentNeighbor packet from %d\n" ,TOS_NODE_ID);
+	   call DiscoverySender.send(discoveryPackage, AM_BROADCAST_ADDR);
+	  
+	   
    }
    
+   
    event message_t* DiscoveryReceive.receive(message_t* msg, void* payload, uint8_t len){
-      uint16_t i;
+	  uint16_t i;
 	  moteN found;
 	  moteN temp;
-	  bool inlist = FALSE;
-	  if(len==sizeof(pack)){
+	  bool inList = FALSE;
+	  uint16_t listSize;
+	 if(len==sizeof(pack)){
         pack* myMsg=(pack*) payload;
+		received++;
 		//Neighbor Discovery
-		if(myMsg->TTL != 0 && myMsg->dest == AM_BROADCAST_ADDR){
-			if(myMsg->protocol == PROTOCOL_PING){
-				makePack(&discoveryPackage, TOS_NODE_ID,AM_BROADCAST_ADDR, --myMsg->TTL, PROTOCOL_PINGREPLY, ++myMsg->seq,(uint8_t*) myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
+		if(myMsg->TTL != 0){
+			if(myMsg->protocol == PROTOCOL_PING && myMsg->dest == AM_BROADCAST_ADDR ){
+				makePack(&discoveryPackage, TOS_NODE_ID,myMsg->src, --myMsg->TTL, PROTOCOL_PINGREPLY, ++myMsg->seq,(uint8_t*) myMsg->payload, PACKET_MAX_PAYLOAD_SIZE);
 				call DiscoverySender.send(discoveryPackage, myMsg->src);
+				return msg;
 			}
 			else if(myMsg->protocol == PROTOCOL_PINGREPLY){ 
+				//dbg(NEIGHBOR_CHANNEL,"revievedNeighbor packet at %d, from %d\n" ,TOS_NODE_ID,myMsg->src);
 				found.id = myMsg->src;
 				found.tls = 5;
-				for(i = 0; i < call neighborList.size();i++){
+
+				listSize = call neighborList.size();
+				for(i = 0; i < listSize;i++){
 					temp = call neighborList.popfront();
+				
 					if(temp.id == found.id){
-						inlist = TRUE;
-						temp.tls++;
+						temp.tls = 5;
+						inList = TRUE;
 					}
 					call neighborList.pushback(temp);
 				}
-				if(inlist == FALSE){
-					call neighborList.pushfront(found);
-				}
-				inlist = FALSE;	
-			}
-		}
-	  }	
-      return msg;
-    }
-   
-   void createNeighborsList(){
-		uint16_t i;
-		moteN temp;
-		char* payload = "";
-		
-		//Check if neighbor list is empty and reduce time last seen(tls)
-		if(!call neighborList.isEmpty()){
-			for(i=0;i< call neighborList.size();i++){
-				temp = call neighborList.popfront();
-				temp.tls--;
-				if(temp.tls != 0){	
-					call neighborList.pushback(temp);
+			
+				if(!inList){
+					call neighborList.pushback(found);
+					//call Routing.createTable();
+					return msg;
+					
 				}
 				
 			}
 		}
-		//Send out Discovery Packet, start neighbor list creation/update
-		makePack(&discoveryPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, PROTOCOL_PING, 50, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
-		call DiscoverySender.send(discoveryPackage, AM_BROADCAST_ADDR);
+		
+		
+	 }	
+      return msg;
+    }
+	
+  void updateNeighborsList(){
+	moteN temp;
+	uint16_t i;
+	uint16_t size = call neighborList.size();
+
+	//Age list	
+	for(i=0;i< call neighborList.size();i++){
+		temp = call neighborList.popfront();
+		temp.tls--;
+		call neighborList.pushback(temp);	
+	}
+	
+	//Remove non existant neighbors
+	for(i=0;i< call neighborList.size();i++){
+		//temp = call neighborList.get(i);
+		temp = call neighborList.popfront();
+		if(temp.tls > 1){
+			//removeNeighbor(temp.id);
+			call neighborList.pushback(temp);
+		}
+		
+	}
+	//if(size > call neighborList.size())
+		//call Routing.printRoutingTable();
+	
    }
+   
+   void createNeighborsList(){
+		char* payload = "";
+		//Send out Discovery Packet, start neighbor list creation
+		makePack(&discoveryPackage, TOS_NODE_ID, AM_BROADCAST_ADDR, 2, PROTOCOL_PING, 50, (uint8_t*)payload, PACKET_MAX_PAYLOAD_SIZE);
+		//dbg(NEIGHBOR_CHANNEL,"sentNeighbor packet from %d\n" ,TOS_NODE_ID);
+		call DiscoverySender.send(discoveryPackage, AM_BROADCAST_ADDR);
+	}
+   
+    bool checkSentList(pack *Package){
+		uint16_t i;
+		for(i = 0; i < call sentList.size(); i++){
+			pack current = call sentList.get(i);
+			if(current.src == Package->src)
+				if(current.seq == Package->seq )
+					return TRUE;
+		}
+		return FALSE;
+    }
+   void removeNeighbor(uint16_t id){
+	   uint16_t i;
+	   for(i = 0; i < call neighborList.size(); i++){
+			moteN current = call neighborList.popfront();
+			if(current.id == id){
+				return;
+			}
+			else{
+				call neighborList.pushback(current);
+			}
+		}
+		return;
+   }
+   
    
    void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t* payload, uint8_t length){
       Package->src = src;

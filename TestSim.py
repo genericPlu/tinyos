@@ -14,6 +14,7 @@ class TestSim:
     # COMMAND TYPES
     CMD_PING = 0
     CMD_NEIGHBOR_DUMP = 1
+    CMD_LINKSTATE_DUMP=2
     CMD_ROUTE_DUMP=3
 
     # CHANNELS - see includes/channels.h
@@ -123,6 +124,9 @@ class TestSim:
 
     def neighborDMP(self, destination):
         self.sendCMD(self.CMD_NEIGHBOR_DUMP, destination, "neighbor command");
+    
+    def linkDMP(self, destination):
+	    self.sendCMD(self.CMD_LINKSTATE_DUMP, destination, "routing command");
 
     def routeDMP(self, destination):
         self.sendCMD(self.CMD_ROUTE_DUMP, destination, "routing command");
@@ -134,28 +138,65 @@ class TestSim:
 def main():
     s = TestSim();
     s.runTime(10);
-    s.loadTopo("long_line.topo");
+    s.loadTopo("ring.topo");
+    #s.loadTopo("long_line.topo");
     s.loadNoise("no_noise.txt");
     s.bootAll();
+    
     s.addChannel(s.COMMAND_CHANNEL);
     s.addChannel(s.GENERAL_CHANNEL);
     s.addChannel(s.FLOODING_CHANNEL);
     s.addChannel(s.NEIGHBOR_CHANNEL);
-
+    s.addChannel(s.ROUTING_CHANNEL);
+    
     s.runTime(40);
-    s.ping(4, 7, 1); 
-    s.runTime(30);
+    #s.ping(4, 7, 1); 
+    s.runTime(20);
+    s.neighborDMP(3);
     #for i in range(1,20):
     #    s.runTime(10);
     #    s.neighborDMP(i);
     #    s.runTime(10);
+    #s.moteOff(3);
+    s.runTime(20);
     s.neighborDMP(4);
-    s.runTime(40);
+    s.runTime(20);
+    #s.linkDMP(1);
+    s.runTime(20);
+   # for i in range(1,20):
+    #    s.runTime(30);
+    #    s.linkDMP(i);
+    #    s.runTime(30);
+    s.runTime(20);	
     s.moteOff(3);
     s.runTime(40);
     s.neighborDMP(4);
-    s.runTime(10);
-	
-	
+    s.runTime(20);
+    s.linkDMP(2)
+	#s.routeDMP(1);
+    s.runTime(20);
+    s.linkDMP(4);
+    s.runTime(20);
+    s.linkDMP(10);
+    s.runTime(20);
+    s.linkDMP(4);
+    s.runTime(20);
+    s.linkDMP(10);
+    s.runTime(20);
+    s.linkDMP(1);
+    s.runTime(20);
+    s.linkDMP(5);
+    s.runTime(20);	
+    s.moteOn(3);
+    s.runTime(40);
+    s.neighborDMP(4);
+    s.runTime(500);
+    s.linkDMP(5);
+    s.runTime(20);	
+    #for i in range(1,20):
+    #    s.runTime(20);
+    #    s.linkDMP(i);
+    #    s.runTime(20);
+    s.runTime(20);	
 if __name__ == '__main__':
     main()
